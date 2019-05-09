@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="anchor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@application.css" fx:controller="com.p8499.pac.controller.FieldsController">
+    <TableView fx:id="table" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="50.0" styleClass="table-row-cell,table-cell">
+        <columns>
+            <TableColumn fx:id="columnSource" text="Source" sortable="false"/>
+            <TableColumn fx:id="columnDatabaseColumn" text="DB Column" sortable="false"/>
+            <TableColumn fx:id="columnDescription" text="Description" sortable="false"/>
+            <TableColumn fx:id="columnNotNull" text="Required" sortable="false"/>
+            <TableColumn fx:id="columnJavaType" text="Java Type" sortable="false"/>
+            <TableColumn fx:id="columnDefaultValue" text="Default Value" sortable="false"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <HBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+        <Button text="_Delete" onAction="#onDeleteClick"/>
+        <Button text="_Add" onAction="#onAddClick"/>
+    </HBox>
+</AnchorPane>

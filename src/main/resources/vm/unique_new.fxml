@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="anchor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@application.css" fx:controller="com.p8499.pac.controller.UniqueNewController">
+    <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="50.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="200" hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <Label text="Items" styleClass="property-label" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="5.0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+            <ListView fx:id="itemCandidates" HBox.hgrow="ALWAYS"/>
+            <VBox HBox.hgrow="NEVER" alignment="CENTER" spacing="5.0">
+                <HBox.margin>
+                    <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+                </HBox.margin>
+                <Button text="&lt;" onAction="#onItemDeselectClick"/>
+                <Button text="&gt;" onAction="#onItemSelectClick"/>
+            </VBox>
+            <ListView fx:id="items" HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <Label text="Key" styleClass="property-label" GridPane.rowIndex="2" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <CheckBox fx:id="key" GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </CheckBox>
+        <Label text="Serial" styleClass="property-label" GridPane.rowIndex="3" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <CheckBox fx:id="serial" GridPane.rowIndex="3" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </CheckBox>
+    </GridPane>
+    <HBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+        <Button text="_Save" onAction="#onSaveClick"/>
+    </HBox>
+</AnchorPane>

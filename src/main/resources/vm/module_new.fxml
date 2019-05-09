@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="anchor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@application.css" fx:controller="com.p8499.pac.controller.ModuleNewController">
+    <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="50.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="200" hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <Label text="ID" styleClass="property-label" GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="id" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Description" styleClass="property-label" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="description" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Comment" styleClass="property-label" GridPane.rowIndex="2" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextArea fx:id="comment" GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextArea>
+        <Label text="Datasource" styleClass="property-label" GridPane.rowIndex="3" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <ComboBox fx:id="dataSource" GridPane.rowIndex="3" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </ComboBox>
+        <Label text="Database Table" styleClass="property-label" GridPane.rowIndex="4" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="databaseTable" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Database View" styleClass="property-label" GridPane.rowIndex="5" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="databaseView" GridPane.rowIndex="5" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Alias" styleClass="property-label" GridPane.rowIndex="6" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="alias" GridPane.rowIndex="6" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Path" styleClass="property-label" GridPane.rowIndex="11" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="path" GridPane.rowIndex="11" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Attachment Path" styleClass="property-label" GridPane.rowIndex="12" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="attachmentPath" GridPane.rowIndex="12" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+    </GridPane>
+    <HBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+        <Button text="_Save" onAction="#onSaveClick"/>
+    </HBox>
+</AnchorPane>

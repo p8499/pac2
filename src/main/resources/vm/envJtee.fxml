@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="anchor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@application.css" fx:controller="com.p8499.pac.controller.EnvJteeController">
+    <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="50.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="200" hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <Label text="App" styleClass="property-label" GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="app" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Base URL" styleClass="property-label" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="baseUrl" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Package" styleClass="property-label" GridPane.rowIndex="2" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="package" GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+    </GridPane>
+    <HBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
+        <Hyperlink text="Data Sources" onAction="#onDataSourcesClick"/>
+    </HBox>
+</AnchorPane>

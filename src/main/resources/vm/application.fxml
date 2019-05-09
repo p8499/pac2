@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane fx:id="border" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p8499.pac.controller.ApplicationController">
+    <top>
+        <MenuBar>
+            <Menu mnemonicParsing="false" text="Source">
+                <Menu mnemonicParsing="false" text="New">
+                    <MenuItem mnemonicParsing="false" text="Empty Project" onAction="#onEmptyClick">
+                        <accelerator>
+                            <KeyCodeCombination code="E" control="DOWN" alt="UP" meta="UP" shift="UP" shortcut="UP"/>
+                        </accelerator>
+                    </MenuItem>
+                    <MenuItem mnemonicParsing="false" text="Sample Project" onAction="#onSampleClick">
+                        <accelerator>
+                            <KeyCodeCombination code="P" control="DOWN" alt="UP" meta="UP" shift="UP" shortcut="UP"/>
+                        </accelerator>
+                    </MenuItem>
+                </Menu>
+                <MenuItem mnemonicParsing="false" text="Open" onAction="#onOpenClick">
+                    <accelerator>
+                        <KeyCodeCombination code="O" control="DOWN" alt="UP" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+                <MenuItem mnemonicParsing="false" text="Save" onAction="#onSaveClick">
+                    <accelerator>
+                        <KeyCodeCombination code="S" control="DOWN" alt="UP" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+                <MenuItem mnemonicParsing="false" text="Save As" onAction="#onSaveAsClick">
+                    <accelerator>
+                        <KeyCodeCombination code="S" control="DOWN" alt="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Project">
+                <MenuItem mnemonicParsing="false" text="Check">
+                    <accelerator>
+                        <KeyCodeCombination code="C" control="DOWN" alt="UP" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+                <MenuItem mnemonicParsing="false" text="About">
+                    <accelerator>
+                        <KeyCodeCombination code="F1" control="UP" alt="UP" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+            </Menu>
+        </MenuBar>
+    </top>
+    <left>
+        <TreeView fx:id="tree" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+    </left>
+    <center/>
+</BorderPane>
