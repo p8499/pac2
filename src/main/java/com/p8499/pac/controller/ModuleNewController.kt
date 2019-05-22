@@ -23,7 +23,7 @@ class ModuleNewController : Controller() {
     @FXML private lateinit var alias: TextField
     @FXML private lateinit var path: TextField
     @FXML private lateinit var attachmentPath: TextField
-    val isIdValid: Boolean get() = id.text.matches("""[_]*[A-Z][a-zA-Z0-9_]*""".toRegex())
+    val isIdValid: Boolean get() = id.text.matches("""[_]*[a-z][a-z0-9_]*""".toRegex())
     val isDescriptionValid: Boolean get() = true
     val isCommentValid: Boolean get() = true
     val isDataSourceValid: Boolean get() = !dataSource.selectionModel.isEmpty

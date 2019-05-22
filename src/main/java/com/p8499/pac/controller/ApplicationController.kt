@@ -128,21 +128,21 @@ class ApplicationController : Controller() {
     private fun showContent(treeItem: TreeItem<*>?) {
         val core = treeItem?.value
         border.center = when (core) {
-            is Project -> "vm/project.fxml"
-            is EnvJtee -> "vm/envJtee.fxml"
-            is DataSources -> "vm/dataSources.fxml"
-            is DataSource -> "vm/dataSource.fxml"
-            is EnvAndroid -> "vm/envAndroid.fxml"
-            is Modules -> "vm/modules.fxml"
-            is Module -> "vm/module.fxml"
-            is Fields -> "vm/fields.fxml"
-            is Field -> "vm/field.fxml"
-            is Values -> "vm/values.fxml"
-            is Value -> "vm/value.fxml"
-            is Uniques -> "vm/uniques.fxml"
-            is Unique -> "vm/unique.fxml"
-            is References -> "vm/references.fxml"
-            is Reference -> "vm/reference.fxml"
+            is Project -> "fxml/project.fxml"
+            is EnvJtee -> "fxml/envJtee.fxml"
+            is DataSources -> "fxml/dataSources.fxml"
+            is DataSource -> "fxml/dataSource.fxml"
+            is EnvAndroid -> "fxml/envAndroid.fxml"
+            is Modules -> "fxml/modules.fxml"
+            is Module -> "fxml/module.fxml"
+            is Fields -> "fxml/fields.fxml"
+            is Field -> "fxml/field.fxml"
+            is Values -> "fxml/values.fxml"
+            is Value -> "fxml/value.fxml"
+            is Uniques -> "fxml/uniques.fxml"
+            is Unique -> "fxml/unique.fxml"
+            is References -> "fxml/references.fxml"
+            is Reference -> "fxml/reference.fxml"
             else -> null
         }?.let {
             scene["core"] = core

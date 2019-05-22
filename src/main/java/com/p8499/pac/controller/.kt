@@ -57,35 +57,35 @@ fun stage(owner: Stage? = null, modality: Modality = Modality.NONE): Stage = Sta
 fun confirm(owner: Stage, message: String): Boolean? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
     stage["message"] = message
-    stage.scene = scene("vm/confirm.fxml")
+    stage.scene = scene("fxml/confirm.fxml")
     stage.showAndWait()
     return stage["result"]
 }
 
 fun dataSource(owner: Stage): DataSource? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
-    stage.scene = scene("vm/dataSource_new.fxml")
+    stage.scene = scene("fxml/dataSource_new.fxml")
     stage.showAndWait()
     return stage["result"]
 }
 
 fun module(owner: Stage): Module? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
-    stage.scene = scene("vm/module_new.fxml")
+    stage.scene = scene("fxml/module_new.fxml")
     stage.showAndWait()
     return stage["result"]
 }
 
 fun field(owner: Stage): Field? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
-    stage.scene = scene("vm/field_new.fxml")
+    stage.scene = scene("fxml/field_new.fxml")
     stage.showAndWait()
     return stage["result"]
 }
 
 fun value(owner: Stage): Value? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
-    stage.scene = scene("vm/value_new.fxml")
+    stage.scene = scene("fxml/value_new.fxml")
     stage.showAndWait()
     return stage["result"]
 }
@@ -93,7 +93,7 @@ fun value(owner: Stage): Value? {
 fun unique(owner: Stage, fields: Fields): Unique? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
     stage["fields"] = fields
-    stage.scene = scene("vm/unique_new.fxml")
+    stage.scene = scene("fxml/unique_new.fxml")
     stage.showAndWait()
     return stage["result"]
 }
@@ -102,7 +102,7 @@ fun reference(owner: Stage, fields: Fields, modules: Modules): Reference? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
     stage["fields"] = fields
     stage["modules"] = modules
-    stage.scene = scene("vm/reference_new.fxml")
+    stage.scene = scene("fxml/reference_new.fxml")
     stage.showAndWait()
     return stage["result"]
 }
