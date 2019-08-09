@@ -1,0 +1,118 @@
+## Context:
+##   Class StringUtils
+##   Class JsonPath
+##   LinkedHashMap project
+##   Integer index
+#set($projectContext=$JsonPath.parse($project))
+
+#set($module=$project.modules[$index])
+package ${project.envJtee.package}.mask;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+public class ${module.alias}Mask {
+    #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
+    ## fields initial value
+    protected long value = 0x$StringUtils.repeat("0",$module.fields.size());
+    ## for each field
+    #foreach($field in $module.fields)
+        ## shift is the bitwise offset, for eg, if there are 5 columns, that'll be 4 for the first, 3 for the second, ..., 0 for the last
+        #set($shift=$module.fields.size()-$velocityCount)
+        ##velocityCount0 is the 0 based index
+        #set($velocityCount0=$velocityCount - 1)
+        ## getter
+        @JsonSerialize
+        public boolean get$StringUtils.capitalize($field.databaseColumn) () {
+            return (value >> $shift & 1) == 1;
+        }
+        ## setter
+        @JsonDeserialize
+        public ${module.alias}Mask set$StringUtils.capitalize($field.databaseColumn) (boolean $field.databaseColumn) {
+            if ($field.databaseColumn) value |= 0x$StringUtils.repeat("0",$velocityCount0)1$StringUtils.repeat("0",$shift);
+            else value &= 0x$StringUtils.repeat("1",$velocityCount0)0$StringUtils.repeat("1",$shift);
+            return this;
+        }
+    #end
+
+    ## constructor
+    public ${module.alias}Mask (
+        #foreach($field in $module.fields)
+            boolean $field.databaseColumn
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+    ) {
+        #foreach($field in $module.fields)
+            set$StringUtils.capitalize($field.databaseColumn)($field.databaseColumn);
+        #end
+    }
+
+    ## constructor
+    public ${module.alias}Mask () {
+    }
+
+    ## all
+    public ${module.alias}Mask all(boolean b) {
+        #foreach($field in $module.fields)
+            set$StringUtils.capitalize($field.databaseColumn)(b);
+        #end
+        return this;
+    }
+
+    ## keys
+    public ${module.alias}Mask keys(boolean b) {
+        #foreach($keyField in $projectContext.read("$.modules[$index].fields[?(@.databaseColumn in $keyUnique.items)]"))
+            set$StringUtils.capitalize($keyField.databaseColumn)(b);
+        #end
+        return this;
+    }
+
+    ## attributes
+    public ${module.alias}Mask attributes(boolean b) {
+        #foreach($attributeField in $projectContext.read("$.modules[$index].fields[?(@.databaseColumn nin $keyUnique.items && @.source=='table')]"))
+            set$StringUtils.capitalize($attributeField.databaseColumn)(b);
+        #end
+        return this;
+    }
+
+    ## physicals
+    public ${module.alias}Mask physicals(boolean b) {
+        #foreach($physicalField in $projectContext.read("$.modules[$index].fields[?(@.source=='table')]"))
+            set$StringUtils.capitalize($physicalField.databaseColumn)(b);
+        #end
+        return this;
+    }
+
+    ## virtuals
+    public ${module.alias}Mask virtuals(boolean b) {
+        #foreach($virtualField in $projectContext.read("$.modules[$index].fields[?(@.source=='view')]"))
+            set$StringUtils.capitalize($virtualField.databaseColumn)(b);
+        #end
+        return this;
+    }
+
+    ## getter by field name
+    public boolean get(String p) {
+        switch(p) {
+            #foreach($field in $module.fields)
+                case "$field.databaseColumn":
+                    return get$StringUtils.capitalize($field.databaseColumn)();
+            #end
+        }
+        return false;
+    }
+
+    ## setter by field name
+    public ${module.alias}Mask set(String p, boolean b) {
+        switch(p) {
+            #foreach($field in $module.fields)
+                case "$field.databaseColumn":
+                    set$StringUtils.capitalize($field.databaseColumn)(b);
+                    break;
+            #end
+        }
+        return this;
+    }
+}

@@ -1,0 +1,16 @@
+##   JsonPath
+##   Class ArrayUtils
+##   LinkedHashMap project
+##   Integer index
+#set($projectContext=$JsonPath.parse($project))
+
+#set($dataSource=$project.envJtee.dataSources[$index])
+#set($moduleArray=$projectContext.read("$.modules[?(@.dataSource=='$dataSource.id')]").toArray())
+$ArrayUtils.reverse($moduleArray)
+#foreach($module in $moduleArray)
+    #if($dataSource.databaseType=="oracle")
+        @${dataSource.id}_drop_table_${module.id}.sql;
+    #elseif($dataSource.databaseType=="postgresql")
+        \i ./${dataSource.id}_drop_table_${module.id}.sql;
+    #end
+#end

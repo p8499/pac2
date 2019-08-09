@@ -1,0 +1,145 @@
+## Context:
+##   Class JsonPath
+##   Class StringUtils
+##   LinkedHashMap project
+##   Integer index
+#set($projectContext=$JsonPath.parse($project))
+
+#set($module=$project.modules[$index])
+package ${project.envJtee.package}.service;
+
+import ${project.envJtee.package}.FilterExpr;
+import ${project.envJtee.package}.OrderByListExpr;
+import ${project.envJtee.package}.mask.${module.alias}Mask;
+import ${project.envJtee.package}.bean.$module.alias;
+import ${project.envJtee.package}.mapper.${module.dataSource}.${module.alias}Mapper;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Update;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import javax.validation.ConstraintViolation;
+import java.util.List;
+import java.util.Set;
+
+@Service("$StringUtils.uncapitalize($module.alias)Mapper")
+public class ${module.alias}Service {
+    #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
+    ## get
+    @Transactional(value="${module.dataSource}_transaction",readOnly=true)
+    public $module.alias get (
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            $keyField.javaType $keyField.databaseColumn,
+        #end
+        ${module.alias}Mask mask
+    ) {
+        return ${StringUtils.uncapitalize($module.alias)}Mapper.get (
+            #foreach($keyItem in $keyUnique.items)
+                $keyItem,
+            #end
+            mask
+        );
+    }
+
+    ## add
+    @Transactional(value="${module.dataSource}_transaction")
+    public $module.alias add($module.alias bean) {
+        if (!validatorFactory.getValidator().validate(bean,Insert.class).isEmpty())
+        {   return null;
+        }
+        ${StringUtils.uncapitalize($module.alias)}Mapper.add(bean);
+        return bean;
+    }
+
+    ## update
+    @Transactional(value="${module.dataSource}_transaction")
+    public $module.alias update($module.alias bean, ${module.alias}Mask mask) {
+        Set<ConstraintViolation<$module.alias>> violationSet= validatorFactory.getValidator().validate(bean, Update.class);
+        for (ConstraintViolation<$module.alias> violation : violationSet)
+            if (mask.get(violation.getPropertyPath().toString()))
+                return null;
+        ${StringUtils.uncapitalize($module.alias)}Mapper.update(bean, mask);
+        return bean;
+    }
+
+    ## delete
+    public boolean delete (
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($velocityCount>1)
+                ,
+            #end
+            $keyField.javaType $keyField.databaseColumn
+        #end
+    ) {
+        return ${StringUtils.uncapitalize($module.alias)}Mapper.delete(
+            #foreach($keyItem in $keyUnique.items)
+                #if($velocityCount>1)
+                    ,
+                #end
+                $keyItem
+            #end
+        );
+    }
+
+    ## delete where
+    @Transactional(value="${module.dataSource}_transaction")
+    public void delete(FilterExpr filter) {
+        ${StringUtils.uncapitalize($module.alias)}Mapper.deleteWhere(filter);
+    }
+
+    ## count
+    @Transactional(value="${module.dataSource}_transaction",readOnly=true)
+    public long count(FilterExpr filter) {
+        return ${StringUtils.uncapitalize($module.alias)}Mapper.count(filter);
+    }
+
+    ## query
+    @Transactional(value="${module.dataSource}_transaction",readOnly=true)
+    public List<$module.alias> query(FilterExpr filter,OrderByListExpr orderByList,long start,long count,${module.alias}Mask mask) {
+        return ${StringUtils.uncapitalize($module.alias)}Mapper.query(filter,orderByList,start,count,mask);
+    }
+
+    ## exists
+    @Transactional(value="${module.dataSource}_transaction",readOnly=true)
+    public boolean exists (
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($velocityCount>1)
+                ,
+            #end
+            $keyField.javaType $keyField.databaseColumn
+        #end
+    ) {
+        return ${StringUtils.uncapitalize($module.alias)}Mapper.exists(
+            #foreach($keyItem in $keyUnique.items)
+                #if($velocityCount>1)
+                    ,
+                #end
+                $keyItem
+            #end
+        );
+    }
+
+    ## for each comparable field
+    #foreach($comparableField in $projectContext.read("$.modules[$index].fields[?(@.javaType in ['Integer','Double','java.util.Date'])]"))
+        ## min
+        @Transactional(value="${module.dataSource}_transaction",readOnly=true)
+        public $comparableField.javaType min$StringUtils.capitalize($comparableField.databaseColumn)(FilterExpr filter,$comparableField.javaType defaultValue) {
+            return ${StringUtils.uncapitalize($module.alias)}Mapper.min$StringUtils.capitalize($comparableField.databaseColumn)(filter,defaultValue);
+        }
+
+        ## max
+        @Transactional(value="${module.dataSource}_transaction",readOnly=true)
+        public $comparableField.javaType max$StringUtils.capitalize($comparableField.databaseColumn)(FilterExpr filter,$comparableField.javaType defaultValue) {
+            return ${StringUtils.uncapitalize($module.alias)}Mapper.max$StringUtils.capitalize($comparableField.databaseColumn)(filter,defaultValue);
+        }
+    #end
+
+    @Value(value="#{$StringUtils.uncapitalize($module.alias)}Mapper")
+    protected ${module.alias}Mapper $StringUtils.uncapitalize($module.alias)Mapper;
+    @Value(value="#{validatorFactory}")
+    protected LocalValidatorFactoryBean validatorFactory;
+}

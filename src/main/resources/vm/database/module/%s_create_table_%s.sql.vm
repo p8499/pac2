@@ -1,0 +1,160 @@
+##   Class JsonPath
+##   LinkedHashMap project
+##   Integer index
+#set($projectContext=$JsonPath.parse($project))
+
+#set($module=$project.modules[$index])
+#set($dataSource=$projectContext.read("$.envJtee.dataSources[?(@.id=='$module.dataSource')]")[0])
+#set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
+/**
+ * ID: ${module.id}
+ * Description: ${module.description}
+ */
+#if($dataSource.databaseType=="oracle")
+    ##oracle
+    ##table
+    CREATE TABLE $module.databaseTable (
+        #foreach($physicalField in $projectContext.read("$.modules[$index].fields[?(@.source=='table')]"))
+            #if($velocityCount>1)
+                ,
+            #end
+            /*$physicalField.description*/
+            $physicalField.databaseColumn.toUpperCase()
+            #if($physicalField.javaType=="Integer")
+                #if($physicalField.integerLength<5)
+                    SMALLINT
+                #elseif($physicalField.integerLength<9)
+                    INTEGER
+                #else
+                    BIGINT
+                #end
+            #elseif($physicalField.javaType=="Double")
+                #set($fullLength=$physicalField.integerLength+$physicalField.fractionLength)
+                NUMBER($fullLength,$physicalField.fractionLength)
+            #elseif($physicalField.javaType=="String")
+                NVARCHAR2($physicalField.stringLength)
+            #elseif($physicalField.javaType=="java.util.Date")
+                TIMESTAMP
+            #end
+            #if($physicalField.notnull)
+                NOT NULL
+            #end
+        #end
+    );
+    ##primary key
+    ALTER TABLE $module.databaseTable ADD CONSTRAINT ${module.databaseTable}_PRIMARY PRIMARY KEY (
+        #foreach($keyItem in $keyUnique.items)
+            #if($velocityCount>1)
+                ,
+            #end
+            $keyItem.toUpperCase()
+        #end
+    );
+    ##unique keys
+    #foreach($nonKeyUnique in $projectContext.read("$.modules[$index].uniques[?(@.key==false)]"))
+        ALTER TABLE $module.databaseTable ADD CONSTRAINT ${module.databaseTable}_UNIQUE_$velocityCount UNIQUE (
+            #foreach($nonKeyItem in $nonKeyUnique.items)
+                #if($velocityCount>1)
+                    ,
+                #end
+                $nonKeyItem.toUpperCase()
+            #end
+        );
+    #end
+    ##references
+    #foreach($reference in $module.references)
+        ALTER TABLE $module.databaseTable ADD CONSTRAINT ${module.databaseTable}_REFERENCE_$velocityCount FOREIGN KEY (
+            #foreach($domestic in $reference.domestics)
+                #if($velocityCount>1)
+                    ,
+                #end
+                $domestic.toUpperCase()
+            #end
+        ) REFERENCES $projectContext.read("$.modules[?(@.id=='$reference.foreignModule')]")[0].databaseTable (
+            #foreach($foreign in $reference.foreigns)
+                #if($velocityCount>1)
+                ,
+                #end
+                $foreign.toUpperCase()
+            #end
+        );
+    #end
+    ##sequences
+    #foreach($serialUnique in $projectContext.read("$.modules[$index].uniques[?(@.serial==true)]"))
+        CREATE SEQUENCE ${module.databaseTable}_$serialUnique.items[0].toUpperCase() MINVALUE 0 START WITH 1;
+    #end
+#elseif($dataSource.databaseType=="postgresql")
+    ##postgresql
+    SET CLIENT_ENCODING = UTF8;
+    ##table
+    CREATE TABLE $module.databaseTable (
+        #foreach($physicalField in $projectContext.read("$.modules[$index].fields[?(@.source=='table')]"))
+            #if($velocityCount>1)
+                ,
+            #end
+            /*$physicalField.description*/
+            $physicalField.databaseColumn.toUpperCase()
+            #if($physicalField.javaType=="Integer")
+                #if($physicalField.integerLength<5)
+                    SMALLINT
+                #elseif($physicalField.integerLength<9)
+                    INTEGER
+                #else
+                    BIGINT
+                #end
+            #elseif($physicalField.javaType=="Double")
+                #set($fullLength=$physicalField.integerLength+$physicalField.fractionLength)
+                DECIMAL($fullLength,$physicalField.fractionLength)
+            #elseif($physicalField.javaType=="String")
+                VARCHAR($physicalField.stringLength)
+            #elseif($physicalField.javaType=="java.util.Date")
+                TIMESTAMP
+            #end
+            #if($physicalField.notnull)
+                NOT NULL
+            #end
+        #end
+    );
+    ##primary key
+    ALTER TABLE $module.databaseTable ADD CONSTRAINT ${module.databaseTable}_PRIMARY PRIMARY KEY (
+        #foreach($keyItem in $keyUnique.items)
+            #if($velocityCount>1)
+                ,
+            #end
+            $keyItem.toUpperCase()
+        #end
+    );
+    ##unique keys
+    #foreach($nonKeyUnique in $projectContext.read("$.modules[$index].uniques[?(@.key==false)]"))
+        ALTER TABLE $module.databaseTable ADD CONSTRAINT ${module.databaseTable}_UNIQUE_$velocityCount UNIQUE (
+            #foreach($nonKeyItem in $nonKeyUnique.items)
+                #if($velocityCount>1)
+                    ,
+                #end
+                $nonKeyItem.toUpperCase()
+            #end
+        );
+    #end
+    ##references
+    #foreach($reference in $module.references)
+        ALTER TABLE $module.databaseTable ADD CONSTRAINT ${module.databaseTable}_REFERENCE_$velocityCount FOREIGN KEY (
+            #foreach($domestic in $reference.domestics)
+                #if($velocityCount>1)
+                    ,
+                #end
+                $domestic.toUpperCase()
+            #end
+        ) REFERENCES $projectContext.read("$.modules[?(@.id=='$reference.foreignModule')]")[0].databaseTable (
+            #foreach($foreign in $reference.foreigns)
+                #if($velocityCount>1)
+                ,
+                #end
+                $foreign.toUpperCase()
+            #end
+        );
+    #end
+    ##sequences
+    #foreach($serialUnique in $projectContext.read("$.modules[$index].uniques[?(@.serial==true)]"))
+        CREATE SEQUENCE ${module.databaseTable}_$serialUnique.items[0].toUpperCase() MINVALUE 0 START WITH 1;
+    #end
+#end

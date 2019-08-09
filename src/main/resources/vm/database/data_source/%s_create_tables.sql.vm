@@ -1,0 +1,13 @@
+##   JsonPath
+##   LinkedHashMap project
+##   Integer index
+#set($projectContext=$JsonPath.parse($project))
+
+#set($dataSource=$project.envJtee.dataSources[$index])
+#foreach($module in $projectContext.read("$.modules[?(@.dataSource=='$dataSource.id')]"))
+    #if($dataSource.databaseType=="oracle")
+        @${dataSource.id}_create_table_${module.id}.sql;
+    #elseif($dataSource.databaseType=="postgresql")
+        \i ./${dataSource.id}_create_table_${module.id}.sql;
+    #end
+#end

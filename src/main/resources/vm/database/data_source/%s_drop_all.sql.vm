@@ -1,0 +1,11 @@
+##   LinkedHashMap project
+##   Integer index
+
+#set($dataSource=$project.envJtee.dataSources[$index])
+#if($dataSource.databaseType=="oracle")
+    @${dataSource.id}_drop_views.sql;
+    @${dataSource.id}_drop_tables.sql;
+#elseif($dataSource.databaseType=="postgresql")
+    \i ./${dataSource.id}_drop_views.sql;
+    \i ./${dataSource.id}_drop_tables.sql;
+#end
