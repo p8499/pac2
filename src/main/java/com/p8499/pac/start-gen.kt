@@ -8,6 +8,7 @@ import java.io.File
 
 
 fun main(args: Array<String>) {
+    //TODO cmd parameters
     jmeter(readFileAsMap("C:/Users/jdeuser/Desktop/sales/sales.json"), File("C:/Users/jdeuser/Desktop/sales/jmeter"))
     database(readFileAsMap("C:/Users/jdeuser/Desktop/sales/sales.json"), File("C:/Users/jdeuser/Desktop/sales/database"))
     server_java(readFileAsMap("C:/Users/jdeuser/Desktop/sales/sales.json"), File("C:/Users/jdeuser/Desktop/sales/server_java"))

@@ -132,6 +132,7 @@ class ApplicationController : Controller() {
             is EnvJtee -> "fxml/envJtee.fxml"
             is DataSources -> "fxml/dataSources.fxml"
             is DataSource -> "fxml/dataSource.fxml"
+            is EnvHtml -> "fxml/envHtml.fxml"
             is EnvAndroid -> "fxml/envAndroid.fxml"
             is Modules -> "fxml/modules.fxml"
             is Module -> "fxml/module.fxml"

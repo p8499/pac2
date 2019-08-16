@@ -1,1 +1,1 @@
-{"name":"MyProject","envJtee":{"app":"","baseUrl":"","package":"","dataSources":[]},"envAndroid":{"package":"","app":""},"modules":[]}
+{"name":"MyProject","envJtee":{"app":"","baseUrl":"","package":"","dataSources":[]},"envHtml":{"baseUrl":""},"envAndroid":{"package":"","app":""},"modules":[]}

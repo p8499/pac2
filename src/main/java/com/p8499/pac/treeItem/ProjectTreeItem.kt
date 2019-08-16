@@ -6,7 +6,7 @@ import javafx.scene.control.TreeItem
 class ProjectTreeItem(project: Project, val parentPath: String = ".") : TreeItem<Any>(project), PathOf, ResetChildrenOf {
     override val path get() = parentPath
     override fun resetChildren() {
-        children.setAll(EnvJteeTreeItem((value as Project).envJtee, path), EnvAndroidTreeItem((value as Project).envAndroid, path), ModulesTreeItem((value as Project).modules, path))
+        children.setAll(EnvJteeTreeItem((value as Project).envJtee, path), EnvHtmlTreeItem((value as Project).envHtml, path), EnvAndroidTreeItem((value as Project).envAndroid, path), ModulesTreeItem((value as Project).modules, path))
         children.filterIsInstance(ResetChildrenOf::class.java).forEach { it.resetChildren() }
     }
 }

@@ -11,6 +11,6 @@ private var printer: PrettyPrinter = PrettyPrinterFactory.newInstance().apply {
 
 fun File.formatXml() {
     val result = StringBuilder()
-    printer.process(readText(), result)
+    printer.process(readText().trim(), result)
     writeText(result.toString())
 }

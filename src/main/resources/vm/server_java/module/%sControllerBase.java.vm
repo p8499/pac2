@@ -39,6 +39,7 @@ public abstract class ${module.alias}ControllerBase {
     protected static final String pathKey = "$value";
 
     ## get
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = path + pathKey,
         method = RequestMethod.GET,
@@ -80,6 +81,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## add
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = path
             #if(!$keyUnique.serial)
@@ -130,6 +132,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## update
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = path + pathKey,
         method = RequestMethod.PUT,
@@ -174,6 +177,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## delete
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = path + pathKey,
         method = RequestMethod.DELETE,
@@ -210,6 +214,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## query
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = path,
         method = RequestMethod.GET,
@@ -259,6 +264,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## downloadAttachment
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.GET,
@@ -307,6 +313,7 @@ public abstract class ${module.alias}ControllerBase {
 
 
     ## uploadAttachment
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.PUT,
@@ -351,6 +358,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## deleteAttachment
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.DELETE,
@@ -390,6 +398,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## listAttachments
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.GET,

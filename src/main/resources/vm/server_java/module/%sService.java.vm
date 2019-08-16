@@ -23,7 +23,7 @@ import javax.validation.ConstraintViolation;
 import java.util.List;
 import java.util.Set;
 
-@Service("$StringUtils.uncapitalize($module.alias)Mapper")
+@Service("$StringUtils.uncapitalize($module.alias)Service")
 public class ${module.alias}Service {
     #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
     ## get
@@ -138,7 +138,7 @@ public class ${module.alias}Service {
         }
     #end
 
-    @Value(value="#{$StringUtils.uncapitalize($module.alias)}Mapper")
+    @Value(value="#{$StringUtils.uncapitalize($module.alias)Mapper}")
     protected ${module.alias}Mapper $StringUtils.uncapitalize($module.alias)Mapper;
     @Value(value="#{validatorFactory}")
     protected LocalValidatorFactoryBean validatorFactory;

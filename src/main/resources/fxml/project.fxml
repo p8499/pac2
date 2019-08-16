@@ -21,6 +21,7 @@
     </GridPane>
     <HBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
         <Hyperlink text="J2EE Environment" onAction="#onEnvJteeClick"/>
+        <Hyperlink text="HTML Environment" onAction="#onEnvHtmlClick"/>
         <Hyperlink text="Android Environment" onAction="#onEnvAndroidClick"/>
         <Hyperlink text="Modules" onAction="#onModulesClick"/>
     </HBox>

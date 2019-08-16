@@ -1,9 +1,6 @@
 package com.p8499.pac.controller
 
-import com.p8499.pac.core.EnvAndroid
-import com.p8499.pac.core.EnvJtee
-import com.p8499.pac.core.Modules
-import com.p8499.pac.core.Project
+import com.p8499.pac.core.*
 import com.p8499.pac.treeItem.find
 import com.p8499.pac.treeItem.refresh
 import com.p8499.pac.treeItem.select
@@ -51,6 +48,12 @@ class ProjectController : Controller() {
     fun onEnvJteeClick() {
         treeItem.isExpanded = true
         tree.select(treeItem.find(EnvJtee::class.java))
+    }
+
+    @FXML
+    fun onEnvHtmlClick() {
+        treeItem.isExpanded = true
+        tree.select(treeItem.find(EnvHtml::class.java))
     }
 
     @FXML

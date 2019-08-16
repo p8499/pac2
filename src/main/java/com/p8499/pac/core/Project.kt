@@ -10,6 +10,7 @@ import javafx.collections.ObservableList
 class Project(
         name: String = "",
         envJtee: EnvJtee = EnvJtee(),
+        envHtml: EnvHtml = EnvHtml(),
         envAndroid: EnvAndroid = EnvAndroid(),
         modules: ObservableList<Module> = FXCollections.emptyObservableList()) {
     var name: String
@@ -18,6 +19,9 @@ class Project(
     var envJtee: EnvJtee
         @JsonSerialize get() = envJteeProperty.value
         @JsonDeserialize set(value) = run { envJteeProperty.value = value }
+    var envHtml: EnvHtml
+        @JsonSerialize get() = envHtmlProperty.value
+        @JsonDeserialize set(value) = run { envHtmlProperty.value = value }
     var envAndroid: EnvAndroid
         @JsonSerialize get() = envAndroidProperty.value
         @JsonDeserialize set(value) = run { envAndroidProperty.value = value }
@@ -28,6 +32,8 @@ class Project(
     val nameProperty: StringProperty = SimpleStringProperty(name)
     @JsonIgnore
     val envJteeProperty: ObjectProperty<EnvJtee> = SimpleObjectProperty(envJtee)
+    @JsonIgnore
+    val envHtmlProperty: ObjectProperty<EnvHtml> = SimpleObjectProperty(envHtml)
     @JsonIgnore
     val envAndroidProperty: ObjectProperty<EnvAndroid> = SimpleObjectProperty(envAndroid)
     @JsonIgnore
