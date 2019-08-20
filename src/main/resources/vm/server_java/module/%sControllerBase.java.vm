@@ -214,7 +214,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## query
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}", , exposedHeaders = "Content-Range")
     @RequestMapping(
         value = path,
         method = RequestMethod.GET,
@@ -240,7 +240,6 @@ public abstract class ${module.alias}ControllerBase {
         long count = rangeObj.getCount(total);
         List<$module.alias> results = onQuery(session, request, response, filterObj, orderByListObj, start, count, maskObj);
         response.setHeader("Content-Range", RangeListExpr.getContentRange(start, results.size(), total));
-        response.setHeader("Access-Control-Expose-Headers","Content-Range");
         return jackson.writeValueAsString(results);
     }
 
@@ -265,7 +264,7 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## downloadAttachment
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}", exposedHeaders = "Content-Disposition")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.GET,
@@ -295,7 +294,6 @@ public abstract class ${module.alias}ControllerBase {
         String contentType = URLConnection.guessContentTypeFromName(name);
         response.setContentType(contentType == null ? "application/octet-stream" : contentType);
         response.setHeader("Content-Disposition", "attachment;fileName=" + name);
-        response.setHeader("Access-Control-Expose-Headers","Content-Disposition");
         StreamUtils.copy(input, response.getOutputStream());
         input.close();
         response.getOutputStream().close();
