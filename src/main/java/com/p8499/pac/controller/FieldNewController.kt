@@ -23,6 +23,7 @@ class FieldNewController : Controller() {
     @FXML private lateinit var integerLength: TextField
     @FXML private lateinit var fractionLength: TextField
     @FXML private lateinit var defaultValue: TextField
+    @FXML private lateinit var datePrecision: ComboBox<String>
     val isSourceValid: Boolean get() = !source.selectionModel.isEmpty
     val isDatabaseColumnValid: Boolean get() = databaseColumn.text.matches("""[a-z_][a-z0-9_]*""".toRegex())
     val isDescriptionValid: Boolean get() = true
@@ -37,6 +38,7 @@ class FieldNewController : Controller() {
             "Double" -> defaultValue.text.isEmpty() || defaultValue.text.matches("""[+-]?(\d+(\.\d*)?|\.\d+)([eE]([+-]?([012]?\d{1,2}|30[0-7])|-3([01]?[4-9]|[012]?[0-3])))?[dD]?""".toRegex())
             else -> true
         }
+    val isDatePrecisionValid: Boolean get() = datePrecision.isDisable || datePrecision.selectionModel.selectedItem != ""
     val core: Field = Field()
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
@@ -82,6 +84,7 @@ class FieldNewController : Controller() {
             integerLength.isDisable = javaType.selectionModel.selectedItem !in arrayOf("Integer", "Double")
             fractionLength.isDisable = javaType.selectionModel.selectedItem != "Double"
             defaultValue.isDisable = javaType.selectionModel.selectedItem !in arrayOf("Integer", "Double", "String")
+            datePrecision.isDisable = javaType.selectionModel.selectedItem != "java.util.Date"
             if (core.javaType != newValue) {
                 core.javaType = newValue
             }
@@ -124,6 +127,14 @@ class FieldNewController : Controller() {
             }
         }
         defaultValue.disableProperty().addListener({ observable, oldValue, newValue -> if (newValue) integerLength.text = "" })
+        datePrecision.selectionModel.clearSelection()
+        datePrecision.selectionModel.selectedItemProperty().addListener { observable, oldValue, newValue ->
+            datePrecision.isValid = isDatePrecisionValid
+            if (core.datePrecision != newValue) {
+                core.datePrecision = newValue
+            }
+        }
+        datePrecision.disableProperty().addListener({ observable, oldValue, newValue -> if (newValue) datePrecision.selectionModel.select("") })
     }
 
     override fun stagized() {

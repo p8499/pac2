@@ -30,6 +30,7 @@ class Field(
         integerLength: Int = 0,
         fractionLength: Int = 0,
         defaultValue: String = "",
+        datePrecision: String = "",
         values: ObservableList<Value> = FXCollections.emptyObservableList()) {
     var source: String
         @JsonSerialize get() = sourceProperty.value
@@ -58,6 +59,9 @@ class Field(
     var defaultValue: String
         @JsonSerialize get() = defaultValueProperty.value
         @JsonDeserialize set(value) = run { defaultValueProperty.value = value }
+    var datePrecision: String
+        @JsonSerialize get() = datePrecisionProperty.value
+        @JsonDeserialize set(value) = run { datePrecisionProperty.value = value }
     var values: ObservableList<Value>
         @JsonSerialize get() = valuesProperty.value
         @JsonDeserialize(`as` = Values::class) set(value) = run { valuesProperty.value = value }
@@ -79,6 +83,8 @@ class Field(
     val fractionLengthProperty: IntegerProperty = SimpleIntegerProperty(fractionLength)
     @JsonIgnore
     val defaultValueProperty: StringProperty = SimpleStringProperty(defaultValue)
+    @JsonIgnore
+    val datePrecisionProperty: StringProperty = SimpleStringProperty(datePrecision)
     @JsonIgnore
     val valuesProperty: ListProperty<Value> = SimpleListProperty(values)
 

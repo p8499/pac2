@@ -71,6 +71,7 @@ fun dataSource(owner: Stage): DataSource? {
 
 fun module(owner: Stage): Module? {
     val stage = stage(owner, Modality.WINDOW_MODAL)
+    stage["project"] = owner["project"]//need context
     stage.scene = scene("fxml/module_new.fxml")
     stage.showAndWait()
     return stage["result"]

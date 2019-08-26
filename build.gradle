@@ -42,3 +42,5 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+//add min/max to double/view fields in j2ee/android bean templates

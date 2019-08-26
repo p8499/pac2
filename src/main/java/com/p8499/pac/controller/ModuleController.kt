@@ -1,13 +1,11 @@
 package com.p8499.pac.controller
 
-import com.p8499.pac.core.Fields
-import com.p8499.pac.core.Module
-import com.p8499.pac.core.References
-import com.p8499.pac.core.Uniques
+import com.p8499.pac.core.*
 import com.p8499.pac.treeItem.find
 import com.p8499.pac.treeItem.refresh
 import com.p8499.pac.treeItem.select
 import javafx.beans.property.ObjectProperty
+import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.*
@@ -125,6 +123,7 @@ class ModuleController : Controller() {
         id.text = core.id
         description.text = core.description
         comment.text = core.comment
+        dataSource.items = FXCollections.observableList((treeItem.parent.parent.value as Project).envJtee.dataSources.map { it.id })
         dataSource.selectionModel.select(core.dataSource)
         databaseTable.text = core.databaseTable
         databaseView.text = core.databaseView

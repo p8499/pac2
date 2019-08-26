@@ -1,6 +1,9 @@
 package com.p8499.pac.controller
 
 import com.p8499.pac.core.Module
+import com.p8499.pac.core.Project
+import javafx.beans.property.ObjectProperty
+import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.ComboBox
@@ -33,6 +36,9 @@ class ModuleNewController : Controller() {
     val isPathValid: Boolean get() = !path.text.startsWith("/") && path.text.endsWith("/")
     val isAttachmentPathValid: Boolean get() = !attachmentPath.text.startsWith("/") && attachmentPath.text.endsWith("/")
     val core: Module = Module()
+    val project: Project
+        get() = stage.get<ObjectProperty<Project>>("project").value
+
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         super.initialize(location, resources)
         id.text = null
@@ -102,6 +108,7 @@ class ModuleNewController : Controller() {
 
     override fun stagized() {
         stage.setOnCloseRequest(this::onClose)
+        dataSource.items = FXCollections.observableList(project.envJtee.dataSources.map { it.id })
     }
 
     @FXML
