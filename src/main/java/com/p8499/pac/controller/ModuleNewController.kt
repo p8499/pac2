@@ -25,6 +25,7 @@ class ModuleNewController : Controller() {
     @FXML private lateinit var databaseView: TextField
     @FXML private lateinit var alias: TextField
     @FXML private lateinit var path: TextField
+    @FXML private lateinit var listPath: TextField
     @FXML private lateinit var attachmentPath: TextField
     val isIdValid: Boolean get() = id.text.matches("""[_]*[a-z][a-z0-9_]*""".toRegex())
     val isDescriptionValid: Boolean get() = true
@@ -34,7 +35,8 @@ class ModuleNewController : Controller() {
     val isDatabaseViewValid: Boolean get() = databaseView.text.matches("""[A-Z_][A-Z0-9_]*""".toRegex())
     val isAliasValid: Boolean get() = alias.text.matches("""[A-Z_][a-zA-Z0-9_]*""".toRegex())
     val isPathValid: Boolean get() = !path.text.startsWith("/") && path.text.endsWith("/")
-    val isAttachmentPathValid: Boolean get() = !attachmentPath.text.startsWith("/") && attachmentPath.text.endsWith("/")
+    val isListPathValid: Boolean get() = !listPath.text.startsWith("/") && !listPath.text.endsWith("/")
+    val isAttachmentPathValid: Boolean get() = !attachmentPath.text.startsWith("/") && !attachmentPath.text.endsWith("/")
     val core: Module = Module()
     val project: Project
         get() = stage.get<ObjectProperty<Project>>("project").value
@@ -95,6 +97,13 @@ class ModuleNewController : Controller() {
             path.isValid = isPathValid
             if (core.path != newValue) {
                 core.path = newValue
+            }
+        }
+        listPath.text = null
+        listPath.textProperty().addListener { observable, oldValue, newValue ->
+            listPath.isValid = isListPathValid
+            if (core.listPath != newValue) {
+                core.listPath = newValue
             }
         }
         attachmentPath.text = null

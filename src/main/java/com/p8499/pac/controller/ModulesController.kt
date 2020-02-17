@@ -23,9 +23,10 @@ class ModulesController : Controller() {
     @FXML private lateinit var table: TableView<Module>
     @FXML private lateinit var columnId: TableColumn<Module, String>
     @FXML private lateinit var columnDescription: TableColumn<Module, String>
+    @FXML private lateinit var columnDataSource: TableColumn<Module, String>
     @FXML private lateinit var columnDatabaseTable: TableColumn<Module, String>
     @FXML private lateinit var columnDatabaseView: TableColumn<Module, String>
-    @FXML private lateinit var columnDataSource: TableColumn<Module, String>
+    @FXML private lateinit var columnAlias: TableColumn<Module, String>
     val core: ObservableList<Module> get() = scene["core"]
     val treeItem: TreeItem<*> get() = scene["treeItem"]
     val tree: TreeView<*> get() = (scene.root as BorderPane).left as TreeView<*>
@@ -83,9 +84,10 @@ class ModulesController : Controller() {
         })
         columnId.setCellValueFactory { it.value.idProperty }
         columnDescription.setCellValueFactory { it.value.descriptionProperty }
+        columnDataSource.setCellValueFactory { it.value.dataSourceProperty }
         columnDatabaseTable.setCellValueFactory { it.value.databaseTableProperty }
         columnDatabaseView.setCellValueFactory { it.value.databaseViewProperty }
-        columnDataSource.setCellValueFactory { it.value.dataSourceProperty }
+        columnAlias.setCellValueFactory { it.value.aliasProperty }
     }
 
     override fun scenarized() {

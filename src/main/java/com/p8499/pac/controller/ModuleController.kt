@@ -25,6 +25,7 @@ class ModuleController : Controller() {
     @FXML private lateinit var databaseView: TextField
     @FXML private lateinit var alias: TextField
     @FXML private lateinit var path: TextField
+    @FXML private lateinit var listPath: TextField
     @FXML private lateinit var attachmentPath: TextField
     val isIdValid: Boolean get() = id.text.matches("""[_]*[a-z][a-z0-9_]*""".toRegex())
     val isDescriptionValid: Boolean get() = true
@@ -34,6 +35,7 @@ class ModuleController : Controller() {
     val isDatabaseViewValid: Boolean get() = databaseView.text.matches("""[A-Z_][A-Z0-9_]*""".toRegex())
     val isAliasValid: Boolean get() = alias.text.matches("""[A-Z_][a-zA-Z0-9_]*""".toRegex())
     val isPathValid: Boolean get() = !path.text.startsWith("/") && !path.text.endsWith("/")
+    val isListPathValid: Boolean get() = !listPath.text.startsWith("/") && !listPath.text.endsWith("/")
     val isAttachmentPathValid: Boolean get() = !attachmentPath.text.startsWith("/") && !attachmentPath.text.endsWith("/")
     val core: Module get() = scene["core"]
     val treeItem: TreeItem<*> get() = scene["treeItem"]
@@ -109,6 +111,14 @@ class ModuleController : Controller() {
                 isModified = true
             }
         }
+        listPath.text = null
+        listPath.textProperty().addListener { observable, oldValue, newValue ->
+            listPath.isValid = isListPathValid
+            if (core.listPath != newValue) {
+                core.listPath = newValue
+                isModified = true
+            }
+        }
         attachmentPath.text = null
         attachmentPath.textProperty().addListener { observable, oldValue, newValue ->
             attachmentPath.isValid = isAttachmentPathValid
@@ -129,6 +139,7 @@ class ModuleController : Controller() {
         databaseView.text = core.databaseView
         alias.text = core.alias
         path.text = core.path
+        listPath.text = core.listPath
         attachmentPath.text = core.attachmentPath
     }
 

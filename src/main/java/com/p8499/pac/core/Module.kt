@@ -10,31 +10,6 @@ import javafx.beans.property.StringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 
-//data class Module(
-//        @JsonProperty var id: String  
-//        @JsonProperty var description: String  
-//        @JsonProperty var comment: String  
-//        @JsonProperty var dataSource: String  
-//        @JsonProperty var databaseTable: String  
-//        @JsonProperty var databaseView: String  
-//        @JsonProperty var jteeBeanAlias: String  
-//        @JsonProperty var jteeMaskAlias: String  
-//        @JsonProperty var jteeMapperAlias: String  
-//        @JsonProperty var jteeServiceAlias: String  
-//        @JsonProperty var jteeControllerBaseAlias: String  
-//        @JsonProperty var jteeControllerPath: String  
-//        @JsonProperty var jteeControllerAttachmentPath: String  
-//        @JsonProperty var androidBeanAlias: String  
-//        @JsonProperty var androidMaskAlias: String  
-//        @JsonProperty var androidStubAlias: String  
-//        @JsonProperty var androidViewAlias: String  
-//        @JsonProperty var androidListViewAlias: String  
-//        @JsonProperty val fields: Fields = Fields(),
-//        @JsonProperty val uniques: Uniques = Uniques(),
-//        @JsonProperty val references: References = References()) {
-//    override fun toString(): String = id
-//}
-
 class Module(
         id: String = "",
         description: String = "",
@@ -44,6 +19,7 @@ class Module(
         databaseView: String = "",
         alias: String = "",
         path: String = "",
+        listPath: String = "",
         attachmentPath: String = "",
         fields: ObservableList<Field> = FXCollections.emptyObservableList(),
         uniques: ObservableList<Unique> = FXCollections.emptyObservableList(),
@@ -72,6 +48,9 @@ class Module(
     var path: String
         @JsonSerialize get() = pathProperty.value
         @JsonDeserialize set(value) = run { pathProperty.value = value }
+    var listPath: String
+        @JsonSerialize get() = listPathProperty.value
+        @JsonDeserialize set(value) = run { listPathProperty.value = value }
     var attachmentPath: String
         @JsonSerialize get() = attachmentPathProperty.value
         @JsonDeserialize set(value) = run { attachmentPathProperty.value = value }
@@ -100,6 +79,8 @@ class Module(
     val aliasProperty: StringProperty = SimpleStringProperty(alias)
     @JsonIgnore
     val pathProperty: StringProperty = SimpleStringProperty(path)
+    @JsonIgnore
+    val listPathProperty: StringProperty = SimpleStringProperty(listPath)
     @JsonIgnore
     val attachmentPathProperty: StringProperty = SimpleStringProperty(attachmentPath)
     @JsonIgnore

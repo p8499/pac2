@@ -88,12 +88,22 @@
                 <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
             </GridPane.margin>
         </TextField>
-        <Label text="Attachment Path" styleClass="property-label" GridPane.rowIndex="12" GridPane.columnIndex="0">
+        <Label text="List Path" styleClass="property-label" GridPane.rowIndex="12" GridPane.columnIndex="0">
             <GridPane.margin>
                 <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
             </GridPane.margin>
         </Label>
-        <TextField fx:id="attachmentPath" GridPane.rowIndex="12" GridPane.columnIndex="1">
+        <TextField fx:id="listPath" GridPane.rowIndex="12" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Attachment Path" styleClass="property-label" GridPane.rowIndex="13" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="attachmentPath" GridPane.rowIndex="13" GridPane.columnIndex="1">
             <GridPane.margin>
                 <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"/>
             </GridPane.margin>
