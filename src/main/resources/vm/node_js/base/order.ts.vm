@@ -1,0 +1,52 @@
+#set($dollar="$")
+class OrderByExpr {
+    constructor(public field: string, public asc: boolean = true) {
+    }
+
+    only(): OrderByListExpr {
+        return new OrderByListExpr().append(this);
+    }
+
+    toString(): string {
+        return `${dollar}{this.asc ? '+' : '-'}${dollar}{this.field}`;
+    }
+}
+
+class OrderByListExpr {
+    public specs: Array<OrderByExpr>;
+
+    constructor(...specs: Array<OrderByExpr>) {
+        this.specs = specs;
+    }
+
+    append(...specs: Array<OrderByExpr>): OrderByListExpr {
+        this.specs.push(...specs);
+        return this;
+    }
+
+    toString(): string {
+        return this.specs.join(',');
+    }
+}
+
+function deserializeOrderByListExpr(str: string): OrderByListExpr | null {
+    let deserializeOrderByExpr = (str: string): OrderByExpr => {
+        return new OrderByExpr(str.substring(1).trim(), str.charAt(0) != '-');
+    };
+    let ss = str.split(',');
+    if (ss.length > 0) {
+        try {
+            let expr = new OrderByListExpr();
+            for (let s of ss)
+                expr.append(deserializeOrderByExpr(s));
+            return expr;
+        }
+        catch {
+            return null;
+        }
+    }
+    else
+        return null;
+}
+
+export {OrderByExpr, OrderByListExpr, deserializeOrderByListExpr}

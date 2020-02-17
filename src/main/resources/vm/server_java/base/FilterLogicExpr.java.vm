@@ -27,9 +27,7 @@ public class FilterLogicExpr implements FilterExpr {
     public FilterLogicExpr(String op, FilterExpr... data) {
         this.op = op;
         this.data = new ArrayList<FilterExpr>();
-        for (FilterExpr datum : data)
-            if (datum != null)
-                this.data.add(datum);
+        for (FilterExpr datum : data) if (datum != null) this.data.add(datum);
     }
 
     public FilterLogicExpr not() {
@@ -60,7 +58,10 @@ public class FilterLogicExpr implements FilterExpr {
         append(FilterConditionExpr.endString(field, value));
         return this;
     }
-
+    public FilterLogicExpr equalsDate(String field,Date value){
+        append(FilterConditionExpr.equalsDate(field, value));
+        return this;
+    }
     public FilterLogicExpr gtDate(String field, Date value) {
         append(FilterConditionExpr.gtDate(field, value));
         return this;
@@ -80,7 +81,29 @@ public class FilterLogicExpr implements FilterExpr {
         append(FilterConditionExpr.leDate(field, value));
         return this;
     }
+    public FilterLogicExpr equalsDateTime(String field,Date value){
+        append(FilterConditionExpr.equalsDateTime(field, value));
+        return this;
+    }
+    public FilterLogicExpr gtDateTime(String field, Date value) {
+        append(FilterConditionExpr.gtDateTime(field, value));
+        return this;
+    }
 
+    public FilterLogicExpr geDateTime(String field, Date value) {
+        append(FilterConditionExpr.geDateTime(field, value));
+        return this;
+    }
+
+    public FilterLogicExpr ltDateTime(String field, Date value) {
+        append(FilterConditionExpr.ltDateTime(field, value));
+        return this;
+    }
+
+    public FilterLogicExpr leDateTime(String field, Date value) {
+        append(FilterConditionExpr.leDateTime(field, value));
+        return this;
+    }
     public FilterLogicExpr equalsNumber(String field, Integer value) {
         append(FilterConditionExpr.equalsNumber(field, value));
         return this;
@@ -105,7 +128,10 @@ public class FilterLogicExpr implements FilterExpr {
         append(FilterConditionExpr.leNumber(field, value));
         return this;
     }
-
+    public FilterLogicExpr isEmpty(String field){
+        append(FilterConditionExpr.isEmpty(field));
+        return this;
+    }
     public FilterLogicExpr equalsField(String field1, String field2) {
         append(FilterConditionExpr.equalsField(field1, field2));
         return this;
@@ -115,14 +141,14 @@ public class FilterLogicExpr implements FilterExpr {
         append(FilterConditionExpr.existsObject(obj, expr));
         return this;
     }
-
     public String toStringPostgresql() {
         if (op == null) {
             return null;
         } else {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             switch (op) {
-                case OP_AND: {
+                case OP_AND:
+                {
                     for (int i = 0; i < data.size(); i++) {
                         sb.append("(");
                         sb.append(data.get(i).toStringPostgresql());
@@ -133,7 +159,8 @@ public class FilterLogicExpr implements FilterExpr {
                     }
                     break;
                 }
-                case OP_OR: {
+                case OP_OR:
+                {
                     for (int i = 0; i < data.size(); i++) {
                         sb.append("(");
                         sb.append(data.get(i).toStringPostgresql());
@@ -144,7 +171,8 @@ public class FilterLogicExpr implements FilterExpr {
                     }
                     break;
                 }
-                case OP_NOT: {
+                case OP_NOT:
+                {
                     sb.append("NOT ");
                     sb.append("(");
                     sb.append(data.get(0).toStringPostgresql());
@@ -160,9 +188,10 @@ public class FilterLogicExpr implements FilterExpr {
         if (op == null) {
             return null;
         } else {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             switch (op) {
-                case OP_AND: {
+                case OP_AND:
+                {
                     for (int i = 0; i < data.size(); i++) {
                         sb.append("(");
                         sb.append(data.get(i).toStringOracle());
@@ -173,7 +202,8 @@ public class FilterLogicExpr implements FilterExpr {
                     }
                     break;
                 }
-                case OP_OR: {
+                case OP_OR:
+                {
                     for (int i = 0; i < data.size(); i++) {
                         sb.append("(");
                         sb.append(data.get(i).toStringOracle());
@@ -184,7 +214,8 @@ public class FilterLogicExpr implements FilterExpr {
                     }
                     break;
                 }
-                case OP_NOT: {
+                case OP_NOT:
+                {
                     sb.append("NOT ");
                     sb.append("(");
                     sb.append(data.get(0).toStringOracle());

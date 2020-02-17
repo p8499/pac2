@@ -8,9 +8,6 @@
 #set($module=$project.modules[$index])
 package ${project.envJtee.package}.mask;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 public class ${module.alias}Mask {
     #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
     ## fields initial value
@@ -22,12 +19,10 @@ public class ${module.alias}Mask {
         ##velocityCount0 is the 0 based index
         #set($velocityCount0=$velocityCount - 1)
         ## getter
-        @JsonSerialize
         public boolean get$StringUtils.capitalize($field.databaseColumn) () {
             return (value >> $shift & 1) == 1;
         }
         ## setter
-        @JsonDeserialize
         public ${module.alias}Mask set$StringUtils.capitalize($field.databaseColumn) (boolean $field.databaseColumn) {
             if ($field.databaseColumn) value |= 0b$StringUtils.repeat("0",$velocityCount0)1$StringUtils.repeat("0",$shift);
             else value &= 0b$StringUtils.repeat("1",$velocityCount0)0$StringUtils.repeat("1",$shift);
@@ -47,6 +42,11 @@ public class ${module.alias}Mask {
         #foreach($field in $module.fields)
             set$StringUtils.capitalize($field.databaseColumn)($field.databaseColumn);
         #end
+    }
+
+    ## constructor
+    public ${module.alias}Mask (long v) {
+        value = v;
     }
 
     ## constructor
@@ -114,5 +114,10 @@ public class ${module.alias}Mask {
             #end
         }
         return this;
+    }
+
+    @Override
+    public String toString(){
+        return String.valueOf(value);
     }
 }

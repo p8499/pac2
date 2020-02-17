@@ -1,0 +1,260 @@
+## Context:
+##   Class StringUtils
+##   Class JsonPath
+##   LinkedHashMap project
+##   Integer index
+#set($dollar="$")
+
+#set($projectContext=$JsonPath.parse($project))
+
+#set($module=$project.modules[$index])
+## for instance: http://www.mydomain.com:8080 or http://www.mydomain.com
+## protocol = http:
+#set($protocol=$project.envJtee.baseUrl.substring(0,$project.envJtee.baseUrl.indexOf("//")))
+## address = www.mydomain.com:8080 or www.mydomain.com
+#set($address=$project.envJtee.baseUrl.substring($project.envJtee.baseUrl.indexOf("//")).substring(2))
+## host = www.mydomain.com
+#if($address.indexOf(":")>-1)
+    #set($host=$address.substring(0, $address.indexOf(":")))
+#else
+    #set($host=$address)
+#end
+## port = 8080 or blank
+#if($address.indexOf(":")>-1)
+    #set($port=$address.substring(0, $address.indexOf(":")).substring(1))
+#else
+    #set($port="80")
+#end
+
+import {FilterLogicExpr} from "../filter";
+import {OrderByListExpr} from "../order";
+import {ContentRange, deserializeContentRange} from "../range";
+import {parameters} from "../utils";
+import {${module.alias}Mask} from "../mask/${module.alias}Mask";
+import {deserialize${module.alias}, deserialize${module.alias}List, ${module.alias}} from "../bean/${module.alias}";
+
+let http = require('http');
+
+#set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
+function get${module.alias} (
+    key: {
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($keyField.javaType=="Integer")
+                $keyField.databaseColumn: number
+            #elseif($keyField.javaType=="Double")
+                $keyField.databaseColumn: number
+            #elseif($keyField.javaType=="String")
+                $keyField.databaseColumn: string
+            #elseif($keyField.javaType=="java.util.Date")
+                $keyField.databaseColumn: number
+            #end
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+    },
+    mask: ${module.alias}Mask | null = null): Promise<{ statusCode: number, $StringUtils.uncapitalize($module.alias): ${module.alias} | null }> {
+    let dict: any = {};
+    if (mask !== null)
+        dict.mask = mask;
+    return new Promise(function (resolve, reject) {
+        const request = http.request({
+            protocol: '$protocol',
+            host: '$host',
+            port: $port,
+            method: 'GET',
+            #set($keys="")
+            #foreach($keyItem in $keyUnique.items)
+                #set($keys=$keys+"/${dollar}{key.${keyItem}}")
+            #end
+            path: `/${project.envJtee.app}/${module.path}_list$keys${dollar}{parameters(dict)}`
+        }, (response: any) => {
+            response.on('data', (data: any) => resolve({
+                statusCode: response.statusCode,
+                $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
+            }));
+        }).on('error', (error: any) => reject(error));
+        request.end();
+    });
+}
+
+function add${module.alias} (bean: $module.alias): Promise<{ statusCode: number, $StringUtils.uncapitalize($module.alias): ($module.alias) | null }> {
+    return new Promise(function (resolve, reject) {
+        const request = http.request({
+            protocol: '$protocol',
+            host: '$host',
+            port: $port,
+            method: 'POST',
+            #set($keys="")
+            #if(!$keyUnique.serial)
+                #foreach($keyItem in $keyUnique.items)
+                    #set($keys=$keys+"/${dollar}{key.${keyItem}}")
+                #end
+            #end
+            path: `/${project.envJtee.app}/${module.path}$keys`
+        }, (response: any) => {
+            response.on('data', (data: any) => resolve({
+                statusCode: response.statusCode,
+                $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
+            }));
+        }).on('error', (error: any) => reject(error));
+        request.write(bean.toString());
+        request.end();
+    });
+
+}
+
+function update${module.alias} (bean: $module.alias, mask: ${module.alias}Mask | null = null): Promise<{ statusCode: number, $StringUtils.uncapitalize($module.alias): ($module.alias)  | null }> {
+    let dict: any = {};
+    if (mask !== null)
+        dict.mask = mask;
+    return new Promise(function (resolve, reject) {
+        const request = http.request({
+            protocol: '$protocol',
+            host: '$host',
+            port: $port,
+            method: 'PUT',
+            #set($keys="")
+            #foreach($keyItem in $keyUnique.items)
+                #set($keys=$keys+"/${dollar}{key.${keyItem}}")
+            #end
+            #set($parameters="${dollar}{parameters(dict)}")
+            path: `/${project.envJtee.app}/${module.path}$keys${dollar}{parameters(dict)}`
+        }, (response: any) => {
+            response.on('data', (data: any) => resolve({
+                statusCode: response.statusCode,
+                $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
+            }));
+        }).on('error', (error: any) => reject(error));
+        request.write(bean.toString());
+        request.end();
+    });
+}
+
+function delete${module.alias} (
+        key: {
+            #foreach($keyItem in $keyUnique.items)
+                #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+                #if($keyField.javaType=="Integer")
+                    $keyField.databaseColumn: number
+                #elseif($keyField.javaType=="Double")
+                    $keyField.databaseColumn: number
+                #elseif($keyField.javaType=="String")
+                    $keyField.databaseColumn: string
+                #elseif($keyField.javaType=="java.util.Date")
+                    $keyField.databaseColumn: number
+                #end
+                #if($velocityHasNext)
+                    ,
+                #end
+            #end
+        }
+    ): Promise<{ statusCode: number, key: {
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($keyField.javaType=="Integer")
+                $keyField.databaseColumn: number
+            #elseif($keyField.javaType=="Double")
+                $keyField.databaseColumn: number
+            #elseif($keyField.javaType=="String")
+                $keyField.databaseColumn: string
+            #elseif($keyField.javaType=="java.util.Date")
+                $keyField.databaseColumn: number
+            #end
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+        } }> {
+    return new Promise(function (resolve, reject) {
+        const request = http.request({
+            protocol: '$protocol',
+            host: '$host',
+            port: $port,
+            method: 'DELETE',
+            #set($keys="")
+            #foreach($keyItem in $keyUnique.items)
+                #set($keys=$keys+"/${dollar}{key.${keyItem}}")
+            #end
+            path: `/${project.envJtee.app}/${module.path}$keys`
+        }, (response: any) => {
+            resolve({
+                statusCode: response.statusCode,
+                key: {
+                    #foreach($keyItem in $keyUnique.items)
+                        $keyItem: key.$keyItem
+                        #if($velocityHasNext)
+                            ,
+                        #end
+                    #end
+                }
+            });
+        }).on('error', (error: any) => reject(error));
+        request.end();
+    });
+}
+
+function query${module.alias} (filter: FilterLogicExpr | null = null, orderBy: OrderByListExpr | null = null, pageSize: number = 10, pageNumber: number = 1, mask: ${module.alias}Mask | null = null): Promise<{ statusCode: number, contentRange: ContentRange, $StringUtils.uncapitalize($module.alias)List: Array<$module.alias> | null }> {
+    let start = (pageNumber - 1) * pageSize;
+    let end = pageNumber * pageSize - 1;
+    let dict: any = {};
+    if (orderBy !== null)
+        dict.orderBy = orderBy;
+    if (mask !== null)
+        dict.mask = mask;
+    return new Promise((resolve, reject) => {
+        const request = http.request({
+            protocol: '$protocol',
+            host: '$host',
+            port: $port,
+            method: 'POST',
+            path: `/${project.envJtee.app}/${module.path}_list${dollar}{parameters(dict)}`,
+            headers: {
+                Range: `items=${dollar}{start}-${dollar}{end}`
+            }
+        }, (response: any) => {
+            response.on('data', (data: any) => resolve({
+                statusCode: response.statusCode,
+                contentRange: deserializeContentRange(response.headers['content-range'])!,
+                $StringUtils.uncapitalize($module.alias)List: deserialize${module.alias}List(data.toString())
+            }));
+        }).on('error', (error: any) => reject(error));
+        if (filter !== null)
+            request.write(filter.toString());
+        request.end();
+    });
+}
+
+function count${module.alias} (filter: FilterLogicExpr | null = null): Promise<{ statusCode: number, total: number }> {
+    return new Promise((resolve, reject) => {
+        const request = http.request({
+            protocol: '$protocol',
+            host: '$host',
+            port: $port,
+            method: 'POST',
+            path: `/${project.envJtee.app}/${module.path}_list`,
+            headers: {
+                Range: `items=1--1`
+            }
+        }, (response: any) => {
+            response.on('data', (data: any) => resolve({
+                statusCode: response.statusCode,
+                total: deserializeContentRange(response.headers['content-range'])!.total
+            }));
+        }).on('error', (error: any) => reject(error));
+        if (filter !== null)
+            request.write(filter.toString());
+        request.end();
+    });
+}
+
+//todo attachments
+export {
+    get$module.alias,
+    add$module.alias,
+    update$module.alias,
+    delete$module.alias,
+    query$module.alias,
+    count$module.alias
+}

@@ -1,0 +1,158 @@
+## Context:
+##   Class StringUtils
+##   Class JsonPath
+##   LinkedHashMap project
+##   Integer index
+#set($projectContext=$JsonPath.parse($project))
+
+#set($module=$project.modules[$index])
+import ${module.alias}Spec from '../spec/${module.alias}Spec'
+import {${module.alias}Mask} from '../mask/${module.alias}Mask'
+#set($dateFieldExists=$projectContext.read("$.modules[0].fields[?(@.javaType=='java.util.Date' && @.datePrecision=='date')]").size()>0)
+#set($datetimeFieldExists=$projectContext.read("$.modules[0].fields[?(@.javaType=='java.util.Date' && @.datePrecision=='datetime')]").size()>0)
+#if($dateFieldExists && $datetimeFieldExists)
+    import {formatDate, formatDateTime, parseDate, parseDateTime} from "../dateFormatter";
+#elseif($dateFieldExists && !$datetimeFieldExists)
+    import {formatDate, parseDate} from "../dateFormatter";
+#elseif(!$dateFieldExists && $datetimeFieldExists)
+    import {formatDateTime, parseDateTime} from "../dateFormatter";
+#end
+
+class ${module.alias} {
+    ## constructor
+    constructor (
+        #foreach($field in $module.fields)
+            #if($field.defaultValue!="")
+                #set($paramValue="${module.alias}Spec.fields.${field.databaseColumn}.default")
+            #else
+                #set($paramValue="null")
+            #end
+            #if($field.javaType=="Integer")
+                #set($paramType="number")
+            #elseif($field.javaType=="Double")
+                #set($paramType="number")
+            #elseif($field.javaType=="String")
+                #set($paramType="string")
+            #elseif($field.javaType=="java.util.Date")
+                #set($paramType="Date")
+            #end
+            public $field.databaseColumn: $paramType|null = $paramValue
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+    ){
+    }
+
+    ## equals
+    equals(target: ${module.alias}, mask: ${module.alias}Mask = new ${module.alias}Mask(
+        #foreach($field in $module.fields)
+            true
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+    )): boolean {
+        return
+        #foreach($field in $module.fields)
+            #if($field.javaType=='Integer' || $field.javaType=='Double' || $field.javaType=='String')
+                !(mask.get$StringUtils.capitalize($field.databaseColumn)()&&!(this.$field.databaseColumn===null&&target.$field.databaseColumn===null||this.$field.databaseColumn!==null&&target.$field.databaseColumn!==null&&this.$field.databaseColumn===target.$field.databaseColumn))
+            #elseif($field.javaType=='java.util.Date')
+                !(mask.get$StringUtils.capitalize($field.databaseColumn)()&&!(this.$field.databaseColumn===null&&target.$field.databaseColumn===null||this.$field.databaseColumn!==null&&target.$field.databaseColumn!==null&&this.${field.databaseColumn}.getTime()===target.${field.databaseColumn}.getTime()))
+            #end
+            #if($velocityHasNext)
+                &&
+            #end
+        #end
+        ;
+    }
+
+    ## copy
+    copy(target:${module.alias} = new ${module.alias}(), mask: ${module.alias}Mask = new ${module.alias}Mask(
+        #foreach($field in $module.fields)
+            true
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+    )): ${module.alias} {
+        #foreach($field in $module.fields)
+            if(mask.get$StringUtils.capitalize($field.databaseColumn)())
+                target.$field.databaseColumn = this.$field.databaseColumn;
+        #end
+        return target;
+    }
+
+    ## toString()
+    toString(): string {
+        let texts: Array<string> = [];
+        #foreach($field in $module.fields)
+            if (this.$field.databaseColumn !== null)
+                #if($field.javaType=='Integer')
+                    #set($temp="${"+"this."+"$field.databaseColumn!"+"}")
+                #elseif($field.javaType=='Double')
+                    #set($temp="${"+"this."+"$field.databaseColumn!"+"}")
+                #elseif($field.javaType=='String')
+                    #set($temp=""""+"${"+"this."+"$field.databaseColumn!"+"}"+"""")
+                #elseif($field.javaType=='java.util.Date')
+                    #set($temp=""""+"${"+"formatDate("+"this."+"$field.databaseColumn!"+")"+"}"+"""")
+                #end
+                texts.push(`"$field.databaseColumn":$temp`);
+        #end
+        #set($temp="{"+"$"+"{"+"texts.join(',')"+"}"+"}")
+        return `$temp`;
+    }
+}
+
+function deserialize${module.alias}(str: string): ${module.alias} | null {
+    try {
+        let obj = JSON.parse(str);
+        return new ${module.alias}(
+            #foreach($field in $module.fields)
+                #if($field.javaType=='Integer')
+                    '$field.databaseColumn' in obj ? obj.$field.databaseColumn : null
+                #elseif($field.javaType=='Double')
+                    '$field.databaseColumn' in obj ? obj.$field.databaseColumn : null
+                #elseif($field.javaType=='String')
+                    '$field.databaseColumn' in obj ? obj.$field.databaseColumn : null
+                #elseif($field.javaType=='java.util.Date')
+                    '$field.databaseColumn' in obj ? parseDate(obj.$field.databaseColumn) : null
+                #end
+                #if($velocityHasNext)
+                    ,
+                #end
+            #end
+        );
+    } catch {
+        return null;
+    }
+}
+
+function deserialize${module.alias}List(str: string): Array<${module.alias}> | null {
+    try {
+        return JSON.parse(str).map((obj: any) => new ${module.alias}(
+            #foreach($field in $module.fields)
+                #if($field.javaType=='Integer')
+                    '$field.databaseColumn' in obj ? obj.$field.databaseColumn : null
+                #elseif($field.javaType=='Double')
+                    '$field.databaseColumn' in obj ? obj.$field.databaseColumn : null
+                #elseif($field.javaType=='String')
+                    '$field.databaseColumn' in obj ? obj.$field.databaseColumn : null
+                #elseif($field.javaType=='java.util.Date')
+                    '$field.databaseColumn' in obj ? parseDate(obj.$field.databaseColumn) : null
+                #end
+                #if($velocityHasNext)
+                    ,
+                #end
+            #end
+        ));
+    } catch {
+        return null;
+    }
+}
+
+export{
+    ${module.alias},
+    deserialize${module.alias},
+    deserialize${module.alias}List
+}

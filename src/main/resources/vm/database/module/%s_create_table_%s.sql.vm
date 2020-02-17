@@ -34,7 +34,7 @@
             #elseif($physicalField.javaType=="String")
                 NVARCHAR2($physicalField.stringLength)
             #elseif($physicalField.javaType=="java.util.Date")
-                TIMESTAMP
+                DATE
             #end
             #if($physicalField.notnull)
                 NOT NULL
@@ -108,7 +108,11 @@
             #elseif($physicalField.javaType=="String")
                 VARCHAR($physicalField.stringLength)
             #elseif($physicalField.javaType=="java.util.Date")
-                TIMESTAMP
+                #if($physicalField.datePrecision=="date")
+                    DATE
+                #elseif($physicalField.datePrecision=="datetime")
+                    TIMESTAMP
+                #end
             #end
             #if($physicalField.notnull)
                 NOT NULL

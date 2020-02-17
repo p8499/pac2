@@ -38,6 +38,8 @@ class ApplicationController : Controller() {
         }
         updateTitle()
         onEmptyClick()
+        stage.get<List<String>>("parameters")
+                .elementAtOrNull(0)?.let { open(readFile(it), it) }
     }
 
     @FXML

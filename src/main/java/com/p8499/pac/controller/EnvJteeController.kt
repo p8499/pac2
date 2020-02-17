@@ -22,7 +22,7 @@ class EnvJteeController : Controller() {
     @FXML private lateinit var baseUrl: TextField
     @FXML private lateinit var `package`: TextField
     val isAppValid: Boolean get() = app.text.matches("""[a-zA-Z_][a-zA-Z0-9_]*""".toRegex())
-    val isBaseUrlValid: Boolean get() = baseUrl.text.isNotEmpty() && baseUrl.text.endsWith("/")
+    val isBaseUrlValid: Boolean get() = baseUrl.text.isNotEmpty() && !baseUrl.text.endsWith("/")
     val isPackageValid: Boolean get() = `package`.text.matches("""([a-z_][a-z0-9_]*(\.[a-z_][a-z0-9_]*)*)""".toRegex())
     val core: EnvJtee get() = scene["core"]
     val treeItem: TreeItem<*> get() = scene["treeItem"]

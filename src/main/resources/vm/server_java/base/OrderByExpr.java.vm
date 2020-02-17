@@ -13,13 +13,15 @@ public class OrderByExpr {
     }
 
     public static OrderByExpr fromQuery(String s) {
-        return s == null ? null : new OrderByExpr(s.substring(1).trim(), s.charAt(0) == '-' ? false : true);
+        return s == null
+                ? null
+                : new OrderByExpr(s.substring(1).trim(), s.charAt(0) != '-' );
     }
 
     public static OrderByExpr fromSql(String s) {
         String s2 = s.trim();
         int iBlank = s2.indexOf(" ");
-        return s == null ? null : new OrderByExpr(s2.substring(0, iBlank).trim(), s2.substring(iBlank + 1).trim().toUpperCase().equals("DESC") ? false : true);
+        return new OrderByExpr(s2.substring(0, iBlank).trim(), !s2.substring(iBlank + 1).trim().toUpperCase().equals("DESC"));
     }
 
     public OrderByListExpr only() {

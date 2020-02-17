@@ -11,4 +11,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public interface FilterExpr {
     String toStringPostgresql();
     String toStringOracle();
+    String OP = "op" ;
+    String DATA = "data" ;
 }

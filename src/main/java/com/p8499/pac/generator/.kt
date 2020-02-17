@@ -9,7 +9,7 @@ import java.io.StringWriter
 
 val velocityEngine = VelocityEngine().apply {
     setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath")
-    setProperty("classpath." + RuntimeConstants.RESOURCE_LOADER + ".class", ClasspathResourceLoader::class.java!!.getName())
+    setProperty("classpath." + RuntimeConstants.RESOURCE_LOADER + ".class", ClasspathResourceLoader::class.java.name)
     setProperty("directive.set.null.allowed", true)
     init()
 }

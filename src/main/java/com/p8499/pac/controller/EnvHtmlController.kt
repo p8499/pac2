@@ -16,7 +16,7 @@ class EnvHtmlController : Controller() {
     override val root: Node get() = anchor
     @FXML private lateinit var anchor: AnchorPane
     @FXML private lateinit var baseUrl: TextField
-    val isBaseUrlValid: Boolean get() = baseUrl.text.isNotEmpty()
+    val isBaseUrlValid: Boolean get() = baseUrl.text.isNotEmpty() && !baseUrl.text.endsWith("/")
     val core: EnvHtml get() = scene["core"]
     val treeItem: TreeItem<*> get() = scene["treeItem"]
     val tree: TreeView<*> get() = (scene.root as BorderPane).left as TreeView<*>

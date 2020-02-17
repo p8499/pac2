@@ -1,0 +1,77 @@
+## Context:
+##   Class StringUtils
+##   LinkedHashMap project
+##   Integer index
+
+#set($module=$project.modules[$index])
+export default {
+    table: '$module.databaseTable',
+    view: '$module.databaseView',
+    name: '$module.id.toUpperCase()',
+    fields: {
+        ## for each field
+        #foreach($field in $module.fields)
+            $field.databaseColumn: {
+                alias: '$field.databaseColumn.toUpperCase()',
+                javaType: '$field.javaType', ##java type
+                #if($field.values.size()>0) ## enum values
+                    values: {
+                        #foreach($value in $field.values)
+                            $value.code: {
+                                value:
+                                #if($field.javaType=="Integer")
+                                    $value.value
+                                #elseif($field.javaType=="Double")
+                                    $value.value
+                                #elseif($field.javaType=="String")
+                                    '$value.value'
+                                #end,
+                                code: '$value.code',
+                                label: '$value.label'
+                            }
+                            #if($velocityHasNext)
+                                ,
+                            #end
+                        #end
+                    },
+                #end
+                #if($field.defaultValue!='') ## default values
+                    default:
+                    #if($field.javaType=="Integer")
+                        $field.defaultValue
+                    #elseif($field.javaType=="Double")
+                        $field.defaultValue
+                    #elseif($field.javaType=="String")
+                        '$field.defaultValue'
+                    #end,
+                #end
+                #if($field.source=="table") ## length
+                    #if($field.javaType=="Integer")
+                        lengthInteger: $field.integerLength,
+                    #elseif($field.javaType=="Double")
+                        lengthInteger: $field.integerLength,
+                        lengthFraction: $field.fractionLength,
+                    #elseif($field.javaType=="String")
+                        lengthString: $field.stringLength,
+                    #end
+                #end
+                #if($field.source=="table") ## min, max
+                    #if($field.javaType=="Integer")
+                        min: -$StringUtils.repeat("9", $field.integerLength),
+                        max: $StringUtils.repeat("9", $field.integerLength),
+                    #elseif($field.javaType=="Double")
+                        min: -$StringUtils.repeat("9", $field.integerLength).$StringUtils.repeat("9", $field.fractionLength),
+                        max: $StringUtils.repeat("9", $field.integerLength).$StringUtils.repeat("9", $field.fractionLength),
+                    #end
+                #end
+                #if($field.javaType=="java.util.Date") ## date precision
+                    datePrecision: '$field.datePrecision',
+                #end
+                description: '$field.description' ## description
+            }
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+    }
+}

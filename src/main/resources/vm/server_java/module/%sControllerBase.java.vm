@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,10 +30,7 @@ public abstract class ${module.alias}ControllerBase {
     protected static final String attachmentPath = "$module.attachmentPath";
     #set($value="")
     #foreach($keyItem in $keyUnique.items)
-        #if($velocityCount>1)
-            #set($value=$value+"/")
-        #end
-        #set($value=$value+"{$keyItem}")
+        #set($value=$value+"/{$keyItem}")
     #end
     protected static final String pathKey = "$value";
 
@@ -55,7 +51,7 @@ public abstract class ${module.alias}ControllerBase {
         #end
         @RequestParam(required = false) String mask
     ) throws Exception {
-        ${module.alias}Mask maskObj = mask == null || mask.equals("") ? new ${module.alias}Mask().all(true) : jackson.readValue(mask, ${module.alias}Mask.class);
+        ${module.alias}Mask maskObj = mask == null || mask.equals("") ? new ${module.alias}Mask().all(true) : new ${module.alias}Mask(Long.valueOf(mask));
         $module.alias bean = onGet(
             session,
             request,
@@ -149,7 +145,7 @@ public abstract class ${module.alias}ControllerBase {
         @RequestBody $module.alias bean,
         @RequestParam(required = false) String mask
     ) throws Exception {
-        ${module.alias}Mask maskObj = mask == null || mask.equals("") ? new ${module.alias}Mask().all(true) : jackson.readValue(mask, ${module.alias}Mask.class);
+        ${module.alias}Mask maskObj = mask == null || mask.equals("") ? new ${module.alias}Mask().all(true) : new ${module.alias}Mask(Long.valueOf(mask));
         onUpdate(
             session,
             request,
@@ -214,25 +210,27 @@ public abstract class ${module.alias}ControllerBase {
     ) throws Exception;
 
     ## query
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}", , exposedHeaders = "Content-Range")
+    @CrossOrigin(origins = "${project.envHtml.baseUrl}", exposedHeaders = "Content-Range")
     @RequestMapping(
-        value = path,
-        method = RequestMethod.GET,
+        value = path + "_list",
+        method = {RequestMethod.GET, RequestMethod.POST},
         produces = "application/json;charset=UTF-8"
     )
     public String query(
         HttpSession session,
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestParam(required = false) String filter,
+        @RequestParam(required = false, name = "filter") String paramFilter,
+        @RequestBody(required = false) String bodyFilter,
         @RequestParam(required = false) String orderBy,
         @RequestHeader(required = false, name = "Range", defaultValue = "items=0-9") String range,
         @RequestParam(required = false) String mask
     ) throws Exception {
+        String filter = paramFilter == null || paramFilter.equals("") ? bodyFilter : paramFilter;
         FilterExpr filterObj = filter == null || filter.equals("") ? null : jackson.readValue(filter, FilterExpr.class);
         OrderByListExpr orderByListObj = orderBy == null || orderBy.equals("") ? null : OrderByListExpr.fromQuery(orderBy);
         RangeExpr rangeObj = RangeExpr.fromQuery(range);
-        ${module.alias}Mask maskObj = mask == null || mask.equals("") ? new ${module.alias}Mask().all(true) : jackson.readValue(mask, ${module.alias}Mask.class);
+        ${module.alias}Mask maskObj = mask == null || mask.equals("") ? new ${module.alias}Mask().all(true) : new ${module.alias}Mask(Long.valueOf(mask));
         Long total = onCount(session, request, response, filterObj);
         if (total == null)
             return null;
