@@ -47,10 +47,7 @@ class FieldNewController : Controller() {
         source.selectionModel.selectedItemProperty().addListener { observable, oldValue, newValue ->
             source.isValid = isSourceValid
             notNull.isDisable = source.selectionModel.selectedItem != "table"
-            stringLength.isDisable = source.selectionModel.selectedItem != "table"
-            integerLength.isDisable = source.selectionModel.selectedItem != "table"
-            fractionLength.isDisable = source.selectionModel.selectedItem != "table"
-            defaultValue.isDisable = source.selectionModel.selectedItem != "table"
+            defaultValue.isDisable = source.selectionModel.selectedItem != "table" || javaType.selectionModel.selectedItem !in arrayOf("Integer", "Double", "String")
             if (core.source != newValue) {
                 core.source = newValue
             }
@@ -83,7 +80,7 @@ class FieldNewController : Controller() {
             stringLength.isDisable = javaType.selectionModel.selectedItem != "String"
             integerLength.isDisable = javaType.selectionModel.selectedItem !in arrayOf("Integer", "Double")
             fractionLength.isDisable = javaType.selectionModel.selectedItem != "Double"
-            defaultValue.isDisable = javaType.selectionModel.selectedItem !in arrayOf("Integer", "Double", "String")
+            defaultValue.isDisable = source.selectionModel.selectedItem != "table" || javaType.selectionModel.selectedItem !in arrayOf("Integer", "Double", "String")
             datePrecision.isDisable = javaType.selectionModel.selectedItem != "java.util.Date"
             if (core.javaType != newValue) {
                 core.javaType = newValue

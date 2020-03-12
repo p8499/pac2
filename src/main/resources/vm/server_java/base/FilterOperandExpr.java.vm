@@ -52,7 +52,7 @@ public class FilterOperandExpr implements FilterExpr {
             case OP_FIELD:
                 return data;
             case OP_DATEFIELD:
-                return String.format("date_trunc('dd',%s)", data);
+                return String.format("trunc(%s,'dd')", data);
             case OP_DATETIMEFIELD:
                 return data;
             case OP_BEAN:

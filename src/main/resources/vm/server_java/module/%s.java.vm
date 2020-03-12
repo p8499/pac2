@@ -56,7 +56,11 @@ public class $module.alias {
         ## fields initial value
         #if($field.javaType=="java.util.Date")
             #set($gmt=$Calendar.getInstance().getTimeZone().getRawOffset()/3600000)
-            @com.fasterxml.jackson.annotation.JsonFormat(timezone="GMT$String.format("%+d",$gmt)",pattern="yyyyMMddHHmmss")
+            #if($field.datePrecision=="date")
+                @com.fasterxml.jackson.annotation.JsonFormat(timezone="GMT$String.format("%+d",$gmt)",pattern="yyyyMMdd")
+            #elseif($field.datePrecision=="datetime")
+                @com.fasterxml.jackson.annotation.JsonFormat(timezone="GMT$String.format("%+d",$gmt)",pattern="yyyyMMddHHmmss")
+            #end
         #end
         protected $field.javaType $field.databaseColumn=
         #if($field.defaultValue!="")
@@ -65,20 +69,18 @@ public class $module.alias {
             null
         #end
         ;
-        ## constraints
-        #if($field.source=="table")
-            #if($field.javaType=="Integer")
-                public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_INTEGER=$field.integerLength;
-                #set($min=1-$Math.pow(10,$field.integerLength))
-                public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_MIN=$String.format("%.0f",$min);
-                #set($max=-1+$Math.pow(10,$field.integerLength))
-                public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_MAX=$String.format("%.0f",$max);
-            #elseif($field.javaType=="Double")
-                public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_INTEGER=$field.integerLength;
-                public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_FRACTION=$field.fractionLength;
-            #elseif($field.javaType=="String")
-                public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_STRING=$field.stringLength;
-            #end
+        ## length min/max
+        #if($field.javaType=="Integer")
+            public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_INTEGER=$field.integerLength;
+            #set($min=1-$Math.pow(10,$field.integerLength))
+            public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_MIN=$String.format("%.0f",$min);
+            #set($max=-1+$Math.pow(10,$field.integerLength))
+            public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_MAX=$String.format("%.0f",$max);
+        #elseif($field.javaType=="Double")
+            public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_INTEGER=$field.integerLength;
+            public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_FRACTION=$field.fractionLength;
+        #elseif($field.javaType=="String")
+            public static final int CONSTRAINT_$field.databaseColumn.toUpperCase()_LENGTH_STRING=$field.stringLength;
         #end
         ## nullable annotation of getter
         #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])

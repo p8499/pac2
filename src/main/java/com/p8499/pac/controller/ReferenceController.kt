@@ -59,7 +59,7 @@ class ReferenceController : Controller() {
                 core.foreignModule = newValue
                 isModified = true
             }
-            foreignCandidates.items = FXCollections.observableList(modules.find { it.alias == newValue }?.fields?.filter { "table" == it.source }?.map { it.databaseColumn })
+            foreignCandidates.items = FXCollections.observableList(modules.find { it.id == newValue }?.fields?.filter { "table" == it.source }?.map { it.databaseColumn })
             foreigns.items = FXCollections.emptyObservableList()
         }
         foreignCandidates.selectionModel.selectionMode = SelectionMode.MULTIPLE
@@ -72,13 +72,13 @@ class ReferenceController : Controller() {
                 core.foreigns = newValue
                 isModified = true
             }
-            foreignCandidates.items = FXCollections.observableList(modules.find { it.alias == foreignModule.selectionModel.selectedItem }?.fields?.filter { "table" == it.source && !foreigns.items.contains(it.databaseColumn) }?.map { it.databaseColumn })
+            foreignCandidates.items = FXCollections.observableList(modules.find { it.id == foreignModule.selectionModel.selectedItem }?.fields?.filter { "table" == it.source && !foreigns.items.contains(it.databaseColumn) }?.map { it.databaseColumn })
         }
     }
 
     override fun scenarized() {
         domesticCandidates.items = FXCollections.observableList(fields.filter { "table" == it.source }.map { it.databaseColumn })
-        foreignModule.items = FXCollections.observableList(modules.map { it.alias })
+        foreignModule.items = FXCollections.observableList(modules.map { it.id })
         domestics.items = core.domestics
         foreignModule.selectionModel.select(core.foreignModule)
         foreigns.items = core.foreigns

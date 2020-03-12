@@ -1,0 +1,42 @@
+## Context:
+##   LinkedHashMap project
+##   Integer index
+#set($dollar="$")
+
+## for instance: http://www.mydomain.com:8080 or http://www.mydomain.com
+## protocol = http:
+#set($protocol=$project.envJtee.baseUrl.substring(0,$project.envJtee.baseUrl.indexOf("//")))
+## address = www.mydomain.com:8080 or www.mydomain.com
+#set($address=$project.envJtee.baseUrl.substring($project.envJtee.baseUrl.indexOf("//")).substring(2))
+## host = www.mydomain.com
+#if($address.indexOf(":")>-1)
+    #set($host=$address.substring(0, $address.indexOf(":")))
+#else
+    #set($host=$address)
+#end
+## port = 8080 or blank
+#if($address.indexOf(":")>-1)
+    #set($port=$address.substring($address.indexOf(":")).substring(1))
+#else
+    #set($port="80")
+#end
+
+const PROTOCOL = '$protocol';
+const HOST = '$host';
+const PORT = $port;
+const APP = '$project.envJtee.app';
+
+function parameters(dict: any): string {
+    const result = Object.keys(dict)
+        .filter(value => dict[value] !== undefined)
+        .map(value => `${dollar}{value}=${dollar}{dict[value]}`).join('&');
+    return Object.keys(dict).length > 0 ? `?${dollar}{result}` : '';
+}
+
+export {
+    PROTOCOL,
+    HOST,
+    PORT,
+    APP,
+    parameters
+}

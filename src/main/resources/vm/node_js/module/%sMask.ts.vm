@@ -6,12 +6,14 @@
 #set($projectContext=$JsonPath.parse($project))
 
 #set($module=$project.modules[$index])
-class ${module.alias}Mask {
+import {Mask} from "../mask";
+
+class ${module.alias}Mask implements Mask{
     #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
     public mask: number;
     constructor (
         #foreach($field in $module.fields)
-            $field.databaseColumn: boolean = false
+            $field.databaseColumn = false
             #if($velocityHasNext)
                 ,
             #end
@@ -32,7 +34,7 @@ class ${module.alias}Mask {
         #set($velocityCount0=$velocityCount - 1)
         ## getter
         get$StringUtils.capitalize($field.databaseColumn) (): boolean {
-            return (this.mask >> $shift & 1) == 1;
+            return (this.mask >> $shift & 1) === 1;
         }
         ## setter
         set$StringUtils.capitalize($field.databaseColumn) ($field.databaseColumn: boolean): ${module.alias}Mask {
@@ -111,13 +113,13 @@ class ${module.alias}Mask {
     }
 }
 
-function deserialize${module.alias}Mask(str: string): ${module.alias}Mask | null {
+function deserialize${module.alias}Mask(str: string): ${module.alias}Mask {
     try {
-        let mask = new ${module.alias}Mask();
+        const mask = new ${module.alias}Mask();
         mask.mask = parseInt(str) & 0b$StringUtils.repeat("1",$module.fields.size());
         return mask;
     } catch {
-        return null;
+        throw Error('Error deserializing ${module.alias}Mask');
     }
 }
 

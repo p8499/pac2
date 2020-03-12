@@ -27,6 +27,7 @@ import ${project.envJtee.package}.service.${module.alias}Service;
 public abstract class ${module.alias}ControllerBase {
     #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
     protected static final String path = "$module.path";
+    protected static final String listPath = "$module.listPath";
     protected static final String attachmentPath = "$module.attachmentPath";
     #set($value="")
     #foreach($keyItem in $keyUnique.items)
@@ -212,7 +213,7 @@ public abstract class ${module.alias}ControllerBase {
     ## query
     @CrossOrigin(origins = "${project.envHtml.baseUrl}", exposedHeaders = "Content-Range")
     @RequestMapping(
-        value = path + "_list",
+        value = listPath,
         method = {RequestMethod.GET, RequestMethod.POST},
         produces = "application/json;charset=UTF-8"
     )

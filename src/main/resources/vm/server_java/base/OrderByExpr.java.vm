@@ -15,7 +15,7 @@ public class OrderByExpr {
     public static OrderByExpr fromQuery(String s) {
         return s == null
                 ? null
-                : new OrderByExpr(s.substring(1).trim(), s.charAt(0) != '-' );
+                : new OrderByExpr(s.charAt(0) == '-' ? s.substring(1).trim() : s.trim(), s.charAt(0) != '-');
     }
 
     public static OrderByExpr fromSql(String s) {
@@ -33,7 +33,7 @@ public class OrderByExpr {
     }
 
     public String toQuery() {
-        return String.format("%s%s", asc ? "+" : "-", field);
+        return String.format("%s%s", asc ? "" : "-", field);
     }
 
     @Override

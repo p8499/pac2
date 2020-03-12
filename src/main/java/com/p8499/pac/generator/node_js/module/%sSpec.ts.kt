@@ -1,7 +1,6 @@
 package com.p8499.pac.generator.node_js.module
 
 import com.jayway.jsonpath.JsonPath
-import com.p8499.pac.formatter.formatJs
 import com.p8499.pac.generator.get
 import com.p8499.pac.generator.render
 import com.p8499.pac.generator.velocityEngine
@@ -27,7 +26,6 @@ fun spec(project: Map<*, *>, folder: File) {
         File(folder, "src/components/gen/spec/${module.stringItem("alias")}Spec.ts").apply {
             if (!parentFile.exists()) parentFile.mkdirs()
             writeText(velocityEngine["vm/node_js/module/%sSpec.ts.vm"].render(context))
-            formatJs()
         }
     }
 }

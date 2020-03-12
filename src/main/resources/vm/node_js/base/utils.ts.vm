@@ -1,9 +1,0 @@
-#set($dollar="$")
-function parameters(dict: any): string {
-    let result = Object.keys(dict).map((value, i, array) => `${dollar}{array[i]}=${dollar}{dict[array[i]]}`).join('&');
-    return Object.keys(dict).length > 0 ? `?${dollar}{result}` : '';
-}
-
-export {
-    parameters
-}

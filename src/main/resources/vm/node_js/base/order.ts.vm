@@ -4,11 +4,12 @@ class OrderByExpr {
     }
 
     only(): OrderByListExpr {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         return new OrderByListExpr().append(this);
     }
 
     toString(): string {
-        return `${dollar}{this.asc ? '+' : '-'}${dollar}{this.field}`;
+        return `${dollar}{this.asc ? '' : '-'}${dollar}{this.field}`;
     }
 }
 
@@ -29,24 +30,29 @@ class OrderByListExpr {
     }
 }
 
-function deserializeOrderByListExpr(str: string): OrderByListExpr | null {
-    let deserializeOrderByExpr = (str: string): OrderByExpr => {
-        return new OrderByExpr(str.substring(1).trim(), str.charAt(0) != '-');
-    };
-    let ss = str.split(',');
-    if (ss.length > 0) {
-        try {
-            let expr = new OrderByListExpr();
-            for (let s of ss)
-                expr.append(deserializeOrderByExpr(s));
-            return expr;
-        }
-        catch {
-            return null;
-        }
+function deserializeOrderByExpr(str: string): OrderByExpr {
+    try {
+        return new OrderByExpr(str.charAt(0) === '-' ? str.substring(1).trim() : str.trim(), str.charAt(0) !== '-');
+    } catch {
+        throw Error('Error deserializing OrderByExpr.');
     }
-    else
-        return null;
 }
 
-export {OrderByExpr, OrderByListExpr, deserializeOrderByListExpr}
+function deserializeOrderByListExpr(str: string): OrderByListExpr {
+    const ss = str.split(',');
+    try {
+        const expr = new OrderByListExpr();
+        for (const s of ss)
+            expr.append(deserializeOrderByExpr(s));
+        return expr;
+    } catch {
+        throw Error('Error deserializing OrderByListExpr.');
+    }
+}
+
+export {
+    OrderByExpr,
+    OrderByListExpr,
+    deserializeOrderByExpr,
+    deserializeOrderByListExpr
+}

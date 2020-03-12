@@ -2,29 +2,37 @@
 ##   Class StringUtils
 ##   LinkedHashMap project
 ##   Integer index
+#set($projectContext=$JsonPath.parse($project))
+#set($ddtFieldExists=$projectContext.read("$.modules[$index].fields[?(@.javaType=='java.util.Date')]").size()>0)
 
 #set($module=$project.modules[$index])
-export default {
-    table: '$module.databaseTable',
-    view: '$module.databaseView',
-    name: '$module.id.toUpperCase()',
-    fields: {
+#if($ddtFieldExists)
+    import {BeanSpec, JavaTypes, DatePrecisions} from "../spec";
+#else
+    import {BeanSpec, JavaTypes} from "../spec";
+#end
+
+class ${module.alias}Spec implements BeanSpec{
+    table = '$module.databaseTable';
+    view = '$module.databaseView';
+    name = '$module.id.toUpperCase()';
+    fields = {
         ## for each field
         #foreach($field in $module.fields)
             $field.databaseColumn: {
                 alias: '$field.databaseColumn.toUpperCase()',
-                javaType: '$field.javaType', ##java type
+                javaType: '$field.javaType' as JavaTypes, ##java type
                 #if($field.values.size()>0) ## enum values
                     values: {
                         #foreach($value in $field.values)
                             $value.code: {
-                                value:
+                                value: ##
                                 #if($field.javaType=="Integer")
-                                    $value.value
+                                    $value.value ##
                                 #elseif($field.javaType=="Double")
-                                    $value.value
+                                    $value.value ##
                                 #elseif($field.javaType=="String")
-                                    '$value.value'
+                                    '$value.value' ##
                                 #end,
                                 code: '$value.code',
                                 label: '$value.label'
@@ -36,36 +44,33 @@ export default {
                     },
                 #end
                 #if($field.defaultValue!='') ## default values
-                    default:
+                    default: ##
                     #if($field.javaType=="Integer")
-                        $field.defaultValue
+                        $field.defaultValue ##
                     #elseif($field.javaType=="Double")
-                        $field.defaultValue
+                        $field.defaultValue ##
                     #elseif($field.javaType=="String")
-                        '$field.defaultValue'
+                        '$field.defaultValue' ##
                     #end,
                 #end
-                #if($field.source=="table") ## length
-                    #if($field.javaType=="Integer")
-                        lengthInteger: $field.integerLength,
-                    #elseif($field.javaType=="Double")
-                        lengthInteger: $field.integerLength,
-                        lengthFraction: $field.fractionLength,
-                    #elseif($field.javaType=="String")
-                        lengthString: $field.stringLength,
-                    #end
+                #if($field.javaType=="Integer") ## length
+                    lengthInteger: $field.integerLength,
+                    lengthFraction: $field.fractionLength,
+                #elseif($field.javaType=="Double")
+                    lengthInteger: $field.integerLength,
+                    lengthFraction: $field.fractionLength,
+                #elseif($field.javaType=="String")
+                    lengthString: $field.stringLength,
                 #end
-                #if($field.source=="table") ## min, max
-                    #if($field.javaType=="Integer")
-                        min: -$StringUtils.repeat("9", $field.integerLength),
-                        max: $StringUtils.repeat("9", $field.integerLength),
-                    #elseif($field.javaType=="Double")
-                        min: -$StringUtils.repeat("9", $field.integerLength).$StringUtils.repeat("9", $field.fractionLength),
-                        max: $StringUtils.repeat("9", $field.integerLength).$StringUtils.repeat("9", $field.fractionLength),
-                    #end
+                #if($field.javaType=="Integer") ## min, max
+                    min: -$StringUtils.repeat("9", $field.integerLength),
+                    max: $StringUtils.repeat("9", $field.integerLength),
+                #elseif($field.javaType=="Double")
+                    min: -$StringUtils.repeat("9", $field.integerLength).$StringUtils.repeat("9", $field.fractionLength),
+                    max: $StringUtils.repeat("9", $field.integerLength).$StringUtils.repeat("9", $field.fractionLength),
                 #end
                 #if($field.javaType=="java.util.Date") ## date precision
-                    datePrecision: '$field.datePrecision',
+                    datePrecision: '$field.datePrecision' as DatePrecisions,
                 #end
                 description: '$field.description' ## description
             }
@@ -73,5 +78,28 @@ export default {
                 ,
             #end
         #end
-    }
+    };
+    uniques = [
+        #foreach($unique in $module.uniques)
+            {   items: [
+                    #foreach($item in $unique.items)
+                        '$item'
+                        #if($velocityHasNext)
+                            ,
+                        #end
+                    #end
+                ],
+                key: $unique.key,
+                seq: $unique.serial
+            }
+            #if($velocityHasNext)
+                ,
+            #end
+        #end
+    ];
+
 }
+
+const ${module.alias.toUpperCase()}_SPEC = new ${module.alias}Spec();
+
+export {${module.alias.toUpperCase()}_SPEC}

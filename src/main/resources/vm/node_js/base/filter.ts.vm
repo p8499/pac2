@@ -10,6 +10,22 @@ const OP_NUMBER = 'number';
 const OP_DATE = 'date';
 const OP_DATETIME = 'datetime';
 
+const OP_EQUAL = 'equal';
+const OP_GREATER = 'greater';
+const OP_LESS = 'less';
+const OP_GREATEREQUAL = 'greaterEqual';
+const OP_LESSEQUAL = 'lessEqual';
+const OP_ISEMPTY = 'isEmpty';
+const OP_CONTAIN = 'contain';
+const OP_STARTWITH = 'startWith';
+const OP_ENDWITH = 'endWith';
+const OP_EXISTS = 'exists';
+
+const OP_AND = 'and';
+const OP_OR = 'or';
+const OP_NOT = 'not';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface FilterExpr {
 }
 
@@ -22,17 +38,6 @@ class FilterOperandExpr implements FilterExpr {
     }
 }
 
-const OP_EQUAL = 'equal';
-const OP_GREATER = 'greater';
-const OP_LESS = 'less';
-const OP_GREATEREQUAL = 'greaterEqual';
-const OP_LESSEQUAL = 'lessEqual';
-const OP_ISEMPTY = 'isEmpty';
-const OP_CONTAIN = 'contain';
-const OP_STARTWITH = 'startWith';
-const OP_ENDWITH = 'endWith';
-const OP_EXISTS = 'exists';
-
 class FilterConditionExpr implements FilterExpr {
     public data: Array<FilterExpr>;
 
@@ -41,8 +46,8 @@ class FilterConditionExpr implements FilterExpr {
     }
 
     not(): FilterLogicExpr {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         return new FilterLogicExpr(OP_NOT, this);
-
     }
 
     toString(): string {
@@ -51,133 +56,133 @@ class FilterConditionExpr implements FilterExpr {
 }
 
 function equalsString(field: string, value: string): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_STRING, value);
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_STRING, value);
     return new FilterConditionExpr(OP_EQUAL, operand1, operand2);
 }
 
 function containsString(field: string, value: string): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_STRING, value);
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_STRING, value);
     return new FilterConditionExpr(OP_CONTAIN, operand1, operand2);
 }
 
 
 function startString(field: string, value: string): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_STRING, value);
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_STRING, value);
     return new FilterConditionExpr(OP_STARTWITH, operand1, operand2);
 }
 
 function endString(field: string, value: string): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_STRING, value);
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_STRING, value);
     return new FilterConditionExpr(OP_ENDWITH, operand1, operand2);
 }
 
 function equalsDate(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
+    const operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
     return new FilterConditionExpr(OP_EQUAL, operand1, operand2);
 }
 
 function gtDate(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
+    const operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
     return new FilterConditionExpr(OP_GREATER, operand1, operand2);
 }
 
 function geDate(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
+    const operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
     return new FilterConditionExpr(OP_GREATEREQUAL, operand1, operand2);
 }
 
 function ltDate(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
+    const operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
     return new FilterConditionExpr(OP_LESS, operand1, operand2);
 }
 
 function leDate(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
+    const operand1 = new FilterOperandExpr(OP_DATEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATE, formatDate(value));
     return new FilterConditionExpr(OP_LESSEQUAL, operand1, operand2);
 }
 
 function equalsDateTime(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
+    const operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
     return new FilterConditionExpr(OP_EQUAL, operand1, operand2);
 }
 
 function gtDateTime(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
+    const operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
     return new FilterConditionExpr(OP_GREATER, operand1, operand2);
 }
 
 function geDateTime(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
+    const operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
     return new FilterConditionExpr(OP_GREATEREQUAL, operand1, operand2);
 }
 
 function ltDateTime(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
+    const operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
     return new FilterConditionExpr(OP_LESS, operand1, operand2);
 }
 
 function leDateTime(field: string, value: Date): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
-    let operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
+    const operand1 = new FilterOperandExpr(OP_DATETIMEFIELD, field);
+    const operand2 = new FilterOperandExpr(OP_DATETIME, formatDateTime(value));
     return new FilterConditionExpr(OP_LESSEQUAL, operand1, operand2);
 }
 
 function equalsNumber(field: string, value: number): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
     return new FilterConditionExpr(OP_EQUAL, operand1, operand2);
 }
 
 function gtNumber(field: string, value: number): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
     return new FilterConditionExpr(OP_GREATER, operand1, operand2);
 }
 
 function geNumber(field: string, value: number): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
     return new FilterConditionExpr(OP_GREATEREQUAL, operand1, operand2);
 }
 
 function ltNumber(field: string, value: number): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
     return new FilterConditionExpr(OP_LESS, operand1, operand2);
 }
 
 function leNumber(field: string, value: number): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
-    let operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand2 = new FilterOperandExpr(OP_NUMBER, value.toString());
     return new FilterConditionExpr(OP_LESSEQUAL, operand1, operand2);
 }
 
 function isEmpty(field: string): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field);
+    const operand1 = new FilterOperandExpr(OP_FIELD, field);
     return new FilterConditionExpr(OP_ISEMPTY, operand1);
 }
 
 function equalsField(field1: string, field2: string): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_FIELD, field1);
-    let operand2 = new FilterOperandExpr(OP_FIELD, field2);
+    const operand1 = new FilterOperandExpr(OP_FIELD, field1);
+    const operand2 = new FilterOperandExpr(OP_FIELD, field2);
     return new FilterConditionExpr(OP_EQUAL, operand1, operand2);
 }
 
 function existsObject(obj: string, expr: FilterLogicExpr): FilterConditionExpr {
-    let operand1 = new FilterOperandExpr(OP_BEAN, obj);
+    const operand1 = new FilterOperandExpr(OP_BEAN, obj);
     return new FilterConditionExpr(OP_EXISTS, operand1, expr);
 }
 
@@ -290,35 +295,26 @@ class FilterLogicExpr implements FilterExpr {
     }
 }
 
-const OP_AND = 'and';
-const OP_OR = 'or';
-const OP_NOT = 'not';
-
-function deserializeFilterExpr(str: string): FilterExpr | null {
-    let decompress = (obj: any): FilterExpr | null => {
+function deserializeFilterExpr(str: string): FilterExpr {
+    const decompress = (obj: any): FilterExpr => {
         if (['a', 'b', 'c'].includes(obj.o)) {
-            let op = obj.o === 'a' ? OP_AND : obj.o === 'b' ? OP_OR : obj.o === 'c' ? OP_NOT : obj.o;
-            let data = Array.isArray(obj.d) ? obj.d.map((value: any) => decompress(value)) : [];
+            const op = obj.o === 'a' ? OP_AND : obj.o === 'b' ? OP_OR : obj.o === 'c' ? OP_NOT : obj.o;
+            const data = Array.isArray(obj.d) ? obj.d.map((value: any) => decompress(value)) : [];
             return new FilterLogicExpr(op, ...data);
-        }
-        else if (['d', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'].includes(obj.o)) {
-            let op = obj.o === 'd' ? OP_EQUAL : obj.o === 'e' ? OP_GREATER : obj.o === 'f' ? OP_LESS : obj.o === 'g' ? OP_GREATEREQUAL : obj.o === 'h' ? OP_LESSEQUAL : obj.o === 'i' ? OP_ISEMPTY : obj.o === 'j' ? OP_CONTAIN : obj.o === 'k' ? OP_STARTWITH : obj.o === 'l' ? OP_ENDWITH : obj.o === 'm' ? OP_EXISTS : obj.o;
-            let data = Array.isArray(obj.d) ? obj.d.map((value: any) => decompress(value)) : [];
+        } else if (['d', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'].includes(obj.o)) {
+            const op = obj.o === 'd' ? OP_EQUAL : obj.o === 'e' ? OP_GREATER : obj.o === 'f' ? OP_LESS : obj.o === 'g' ? OP_GREATEREQUAL : obj.o === 'h' ? OP_LESSEQUAL : obj.o === 'i' ? OP_ISEMPTY : obj.o === 'j' ? OP_CONTAIN : obj.o === 'k' ? OP_STARTWITH : obj.o === 'l' ? OP_ENDWITH : obj.o === 'm' ? OP_EXISTS : obj.o;
+            const data = Array.isArray(obj.d) ? obj.d.map((value: any) => decompress(value)) : [];
             return new FilterConditionExpr(op, ...data);
-        }
-        else if (['o', 'p', 'q', 'r', 's', 't', 'u', 'v'].includes(obj.o)) {
-            let op = obj.o === 'o' ? OP_FIELD : obj.o === 'p' ? OP_DATEFIELD : obj.o === 'q' ? OP_DATETIMEFIELD : obj.o === 'r' ? OP_BEAN : obj.o === 's' ? OP_STRING : obj.o === 't' ? OP_NUMBER : obj.o === 'u' ? OP_DATE : obj.o === 'v' ? OP_DATETIME : obj.o;
-            let data = obj.d;
+        } else if (['o', 'p', 'q', 'r', 's', 't', 'u', 'v'].includes(obj.o)) {
+            const op = obj.o === 'o' ? OP_FIELD : obj.o === 'p' ? OP_DATEFIELD : obj.o === 'q' ? OP_DATETIMEFIELD : obj.o === 'r' ? OP_BEAN : obj.o === 's' ? OP_STRING : obj.o === 't' ? OP_NUMBER : obj.o === 'u' ? OP_DATE : obj.o === 'v' ? OP_DATETIME : obj.o;
+            const data = obj.d;
             return new FilterOperandExpr(op, data);
-        }
-        else
-            return null;
+        } else throw Error(`${dollar}{obj.o} is not recognized.`);
     };
     try {
         return decompress(JSON.parse(str));
-    }
-    catch {
-        return null;
+    } catch {
+        return Error('Error deserializing FilterExpr.');
     }
 }
 
@@ -344,6 +340,7 @@ export {
     OP_AND,
     OP_OR,
     OP_NOT,
+    FilterExpr,
     FilterOperandExpr,
     FilterConditionExpr,
     FilterLogicExpr,

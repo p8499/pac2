@@ -1,7 +1,6 @@
 package com.p8499.pac.generator.node_js.module
 
 import com.jayway.jsonpath.JsonPath
-import com.p8499.pac.formatter.formatJs
 import com.p8499.pac.generator.get
 import com.p8499.pac.generator.render
 import com.p8499.pac.generator.velocityEngine
@@ -27,7 +26,6 @@ fun stub(project: Map<*, *>, folder: File) {
         File(folder, "src/components/gen/stub/${module.stringItem("alias")}Stub.ts").apply {
             if (!parentFile.exists()) parentFile.mkdirs()
             writeText(velocityEngine["vm/node_js/module/%sStub.ts.vm"].render(context))
-            formatJs()
         }
     }
 }

@@ -20,6 +20,7 @@ fun main(args: Array<String>) {
             .addOption("gm", "generate-jmeter", true, "Generate jmeter scripts.")
             .addOption("gs", "generate-server_java", true, "Generate server java code.")
             .addOption("gn", "generate-node_js", true, "Generate node js code.")
+            .addOption("gn_eslint", "generate-node_js-eslint", true, "Specify the Node.js project which has ESLint installed to prettify the code.")
             .addOption("ga", "generate-android_java", true, "Generate android java code.")
             .addOption("u", "ui", false, "Launch ui.")
     try {
@@ -31,7 +32,10 @@ fun main(args: Array<String>) {
         if (line.hasOption("gs"))
             server_java(readFileAsMap(line.args[0]), File(line.getOptionValue("gs")))
         if (line.hasOption("gn"))
-            node_js(readFileAsMap(line.args[0]), File(line.getOptionValue("gn")))
+            if (line.hasOption("gn_eslint"))
+                node_js(readFileAsMap(line.args[0]), File(line.getOptionValue("gn")), File(line.getOptionValue("gn_eslint")))
+            else
+                node_js(readFileAsMap(line.args[0]), File(line.getOptionValue("gn")))
         if (line.hasOption("ga"))
             android_java(readFileAsMap(line.args[0]), File(line.getOptionValue("ga")))
         if (line.hasOption("u"))

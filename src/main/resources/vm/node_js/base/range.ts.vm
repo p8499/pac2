@@ -16,17 +16,18 @@ class ContentRange {
     }
 }
 
-function deserializeContentRange(str: string): ContentRange | null {
+function deserializeContentRange(str: string): ContentRange {
     try {
-        let iblank = str.indexOf(' ');
-        let idash = str.indexOf('-');
-        let islash = str.indexOf('/');
+        const iblank = str.indexOf(' ');
+        const idash = str.indexOf('-');
+        const islash = str.indexOf('/');
         return new ContentRange(
             parseInt(str.substr(iblank + 1, idash - iblank - 1)),
             parseInt(str.substr(idash + 1, islash - idash - 1)),
-            parseInt(str.substr(islash + 1)));
+            parseInt(str.substr(islash + 1)),
+        );
     } catch {
-        return null;
+        throw Error('Error deserializing ContentRange.');
     }
 }
 

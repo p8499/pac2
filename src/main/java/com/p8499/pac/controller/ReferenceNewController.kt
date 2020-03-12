@@ -47,7 +47,7 @@ class ReferenceNewController : Controller() {
             if (core.foreignModule != newValue) {
                 core.foreignModule = newValue
             }
-            foreignCandidates.items = FXCollections.observableList(modules.find { it.alias == newValue }?.fields?.filter { "table" == it.source }?.map { it.databaseColumn })
+            foreignCandidates.items = FXCollections.observableList(modules.find { it.id == newValue }?.fields?.filter { "table" == it.source }?.map { it.databaseColumn })
             foreigns.items = FXCollections.emptyObservableList()
         }
         foreignCandidates.selectionModel.selectionMode = SelectionMode.MULTIPLE
@@ -59,14 +59,14 @@ class ReferenceNewController : Controller() {
             if (core.foreigns != newValue) {
                 core.foreigns = newValue
             }
-            foreignCandidates.items = FXCollections.observableList(modules.find { it.alias == foreignModule.selectionModel.selectedItem }?.fields?.filter { "table" == it.source && !foreigns.items.contains(it.databaseColumn) }?.map { it.databaseColumn })
+            foreignCandidates.items = FXCollections.observableList(modules.find { it.id == foreignModule.selectionModel.selectedItem }?.fields?.filter { "table" == it.source && !foreigns.items.contains(it.databaseColumn) }?.map { it.databaseColumn })
         }
     }
 
     override fun stagized() {
         stage.setOnCloseRequest(this::onClose)
         domesticCandidates.items = FXCollections.observableList(fields.filter { "table" == it.source }.map { it.databaseColumn })
-        foreignModule.items = FXCollections.observableList(modules.map { it.alias })
+        foreignModule.items = FXCollections.observableList(modules.map { it.id })
     }
 
     @FXML

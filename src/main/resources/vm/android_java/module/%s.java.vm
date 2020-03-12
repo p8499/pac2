@@ -50,7 +50,11 @@ public class $module.alias implements Parcelable {
         ## fields initial value
         #if($field.javaType=="java.util.Date")
             #set($gmt=$Calendar.getInstance().getTimeZone().getRawOffset()/3600000)
-            @com.fasterxml.jackson.annotation.JsonFormat(timezone="GMT$String.format("%+d",$gmt)",pattern="yyyyMMddHHmmss")
+            #if($field.datePrecision=="date")
+                @com.fasterxml.jackson.annotation.JsonFormat(timezone="GMT$String.format("%+d",$gmt)",pattern="yyyyMMdd")
+            #elseif($field.datePrecision=="datetime")
+                @com.fasterxml.jackson.annotation.JsonFormat(timezone="GMT$String.format("%+d",$gmt)",pattern="yyyyMMddHHmmss")
+            #end
         #end
         protected $field.javaType $field.databaseColumn=
         #if($field.defaultValue!="")
