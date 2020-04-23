@@ -14,7 +14,7 @@
 import {FilterLogicExpr} from "../filter";
 import {OrderByListExpr} from "../order";
 import {ContentRange, deserializeContentRange} from "../range";
-import {PROTOCOL, HOST, PORT, APP, parameters} from "../common";
+import {PROTOCOL, HOST, PORT, APP, ServerError, parameters} from "../common";
 import {${module.alias}Mask} from "../mask/${module.alias}Mask";
 import {deserialize${module.alias}, deserialize${module.alias}List, ${module.alias}} from "../bean/${module.alias}";
 #if($dateKeyExists && $datetimeKeyExists)
@@ -65,10 +65,13 @@ async function get${module.alias} (
         #end
     #end
     const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'GET', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
-    return {
-        statusCode: response.status,
-        $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(await response.text())
-    };
+    if (response.status < 400)
+        return {
+            statusCode: response.status,
+            $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(await response.text())
+        };
+    else
+        throw new ServerError(response.status);
 ##    return new Promise(function (resolve, reject) {
 ##        const request = http.request({
 ##            protocol: '$protocol',
@@ -91,10 +94,13 @@ async function get${module.alias} (
 ##            #end
 ##            path: `/${project.envJtee.app}/${module.path}$keys${dollar}{parameters(dict)}`
 ##        }, (response: any) => {
-##            response.on('data', (data: any) => resolve({
-##                statusCode: response.statusCode,
-##                $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
-##            }));
+##            if (response.status < 400)
+##                response.on('data', (data: any) => resolve({
+##                    statusCode: response.statusCode,
+##                    $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
+##                }));
+##            else
+##                throw new ServerError(response.status);
 ##        }).on('error', (error: any) => reject(error));
 ##        request.end();
 ##    });
@@ -118,10 +124,13 @@ async function add${module.alias} (bean: $module.alias): Promise<{ statusCode: n
         #end
     #end
     const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
-    return {
-        statusCode: response.status,
-        $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(await response.text()),
-    };
+    if (response.status < 400)
+        return {
+            statusCode: response.status,
+            $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(await response.text()),
+        };
+    else
+        throw new ServerError(response.status);
 ##    return new Promise(function (resolve, reject) {
 ##        const request = http.request({
 ##            protocol: '$protocol',
@@ -146,10 +155,13 @@ async function add${module.alias} (bean: $module.alias): Promise<{ statusCode: n
 ##            #end
 ##            path: `/${project.envJtee.app}/${module.path}$keys`
 ##        }, (response: any) => {
-##            response.on('data', (data: any) => resolve({
-##                statusCode: response.statusCode,
-##                $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
-##            }));
+##            if (response.status < 400)
+##                response.on('data', (data: any) => resolve({
+##                    statusCode: response.statusCode,
+##                    $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
+##                }));
+##            else
+##                throw new ServerError(response.status);
 ##        }).on('error', (error: any) => reject(error));
 ##        request.write(bean.toString());
 ##        request.end();
@@ -174,10 +186,13 @@ async function update${module.alias} (bean: $module.alias, mask?: ${module.alias
         #end
     #end
     const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'PUT', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
-    return {
-        statusCode: response.status,
-        $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(await response.text()),
-    };
+    if (response.status < 400)
+        return {
+            statusCode: response.status,
+            $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(await response.text()),
+        };
+    else
+        throw new ServerError(response.status);
 ##    return new Promise(function (resolve, reject) {
 ##        const request = http.request({
 ##            protocol: '$protocol',
@@ -200,10 +215,13 @@ async function update${module.alias} (bean: $module.alias, mask?: ${module.alias
 ##            #end
 ##            path: `/${project.envJtee.app}/${module.path}$keys${dollar}{parameters(dict)}`
 ##        }, (response: any) => {
-##            response.on('data', (data: any) => resolve({
-##                statusCode: response.statusCode,
-##                $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
-##            }));
+##            if (response.status < 400)
+##                response.on('data', (data: any) => resolve({
+##                    statusCode: response.statusCode,
+##                    $StringUtils.uncapitalize($module.alias): deserialize${module.alias}(data.toString()),
+##                }));
+##            else
+##                throw new ServerError(response.status);
 ##        }).on('error', (error: any) => reject(error));
 ##        request.write(bean.toString());
 ##        request.end();
@@ -260,17 +278,21 @@ async function delete${module.alias} ( ##
         #end
     #end
     const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys`, {method: 'DELETE', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
-    return {
-        statusCode: response.status,
-        key: {
-            #foreach($keyItem in $keyUnique.items)
-                $keyItem: key.$keyItem ##
-                #if($velocityHasNext)
-                    , ##
+    if (response.status < 400)
+        return {
+            statusCode: response.status,
+            key: {
+                #foreach($keyItem in $keyUnique.items)
+                    $keyItem: key.$keyItem ##
+                    #if($velocityHasNext)
+                        , ##
+                    #end
                 #end
-            #end
-        }
-    };
+            }
+        };
+    else
+        throw new ServerError(response.status);
+
 ##    return new Promise(function (resolve, reject) {
 ##        const request = http.request({
 ##            protocol: '$protocol',
@@ -293,17 +315,20 @@ async function delete${module.alias} ( ##
 ##            #end
 ##            path: `/${project.envJtee.app}/${module.path}$keys`
 ##        }, (response: any) => {
-##            resolve({
-##                statusCode: response.statusCode,
-##                key: {
-##                    #foreach($keyItem in $keyUnique.items)
-##                        $keyItem: key.$keyItem ##
-##                        #if($velocityHasNext)
-##                            , ##
+##            if (response.status < 400)
+##                resolve({
+##                    statusCode: response.statusCode,
+##                    key: {
+##                        #foreach($keyItem in $keyUnique.items)
+##                            $keyItem: key.$keyItem ##
+##                            #if($velocityHasNext)
+##                                , ##
+##                            #end
 ##                        #end
-##                    #end
-##                }
-##            });
+##                    }
+##                });
+##            else
+##                throw new ServerError(response.status);
 ##        }).on('error', (error: any) => reject(error));
 ##        request.end();
 ##    });
@@ -318,11 +343,15 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
     dict.orderBy = options.orderBy;
     dict.mask = options.mask;
     const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{LIST_PATH}${dollar}{parameters(dict)}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=${dollar}{start}-${dollar}{end}`}, body: options.filter?.toString()});
-    return {
-        statusCode: response.status,
-        list: deserialize${module.alias}List(await response.text()),
-        contentRange: deserializeContentRange(response.headers.get('content-range') as string)
-    };
+    if (response.status < 400)
+        return {
+            statusCode: response.status,
+            list: deserialize${module.alias}List(await response.text()),
+            contentRange: deserializeContentRange(response.headers.get('content-range') as string)
+        };
+    else
+        throw new ServerError(response.status);
+
 ##    return new Promise((resolve, reject) => {
 ##        const request = http.request({
 ##            protocol: '$protocol',
@@ -334,11 +363,14 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
 ##                Range: `items=${dollar}{start}-${dollar}{end}`
 ##            }
 ##        }, (response: any) => {
-##            response.on('data', (data: any) => resolve({
-##                statusCode: response.statusCode,
-##                contentRange: deserializeContentRange(response.headers['content-range'])!,
-##                $StringUtils.uncapitalize($module.alias)List: deserialize${module.alias}List(data.toString())
-##            }));
+##            if (response.status < 400)
+##                response.on('data', (data: any) => resolve({
+##                    statusCode: response.statusCode,
+##                    contentRange: deserializeContentRange(response.headers['content-range'])!,
+##                    $StringUtils.uncapitalize($module.alias)List: deserialize${module.alias}List(data.toString())
+##                }));
+##            else
+##                throw new ServerError(response.status);
 ##        }).on('error', (error: any) => reject(error));
 ##        if (filter !== null)
 ##            request.write(filter.toString());
@@ -348,10 +380,13 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
 
 async function count${module.alias} (options: {filter?: FilterLogicExpr}): Promise<{ statusCode: number; total: number }> {
     const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{LIST_PATH}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=items=1--1`}, body: options.filter?.toString()});
-    return {
-        statusCode: response.status,
-        total: deserializeContentRange(response.headers.get('content-range') as string).total
-    };
+    if (response.status < 400)
+        return {
+            statusCode: response.status,
+            total: deserializeContentRange(response.headers.get('content-range') as string).total
+        };
+    else
+        throw new ServerError(response.status);
 ##    return new Promise((resolve, reject) => {
 ##        const request = http.request({
 ##            protocol: '$protocol',
@@ -363,10 +398,13 @@ async function count${module.alias} (options: {filter?: FilterLogicExpr}): Promi
 ##                Range: `items=1--1`
 ##            }
 ##        }, (response: any) => {
-##            response.on('data', (data: any) => resolve({
-##                statusCode: response.statusCode,
-##                total: deserializeContentRange(response.headers['content-range'])!.total
-##            }));
+##            if (response.status < 400)
+##                response.on('data', (data: any) => resolve({
+##                    statusCode: response.statusCode,
+##                    total: deserializeContentRange(response.headers['content-range'])!.total
+##                }));
+##            else
+##                throw new ServerError(response.status);
 ##        }).on('error', (error: any) => reject(error));
 ##        if (filter !== null)
 ##            request.write(filter.toString());

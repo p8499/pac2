@@ -42,6 +42,23 @@ class ${module.alias}Spec implements BeanSpec{
                             #end
                         #end
                     },
+                    getLabel(value: number | string | Date): string | null {
+                        switch (value) {
+                            #foreach($value in $field.values)
+                                case ##
+                                    #if($field.javaType=="Integer")
+                                        $value.value ##
+                                    #elseif($field.javaType=="Double")
+                                        $value.value ##
+                                    #elseif($field.javaType=="String")
+                                        '$value.value' ##
+                                    #end:
+                                    return '$value.label';
+                            #end
+                            default:
+                                return null;
+                        }
+                    },
                 #end
                 #if($field.defaultValue!='') ## default values
                     default: ##

@@ -12,6 +12,7 @@ interface FieldSpec {
     javaType: JavaTypes;
     datePrecision?: DatePrecisions;
     values?: Record<string, ValueSpec>;
+    getLabel?(value: number | string | Date): string | null;
     default?: number | string | Date;
     lengthInteger?: number;
     lengthFraction?: number;

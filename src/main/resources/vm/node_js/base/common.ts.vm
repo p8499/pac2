@@ -26,6 +26,13 @@ const HOST = '$host';
 const PORT = $port;
 const APP = '$project.envJtee.app';
 
+class ServerError extends Error {
+    constructor(public statusCode: number) {
+        super(`HTTP Status: ${dollar}{statusCode}`);
+        Object.setPrototypeOf(this, ServerError.prototype);
+    }
+}
+
 function parameters(dict: any): string {
     const result = Object.keys(dict)
         .filter(value => dict[value] !== undefined)
@@ -38,5 +45,6 @@ export {
     HOST,
     PORT,
     APP,
+    ServerError,
     parameters
 }
