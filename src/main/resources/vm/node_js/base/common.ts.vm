@@ -5,26 +5,46 @@
 
 ## for instance: http://www.mydomain.com:8080 or http://www.mydomain.com
 ## protocol = http:
-#set($protocol=$project.envJtee.baseUrl.substring(0,$project.envJtee.baseUrl.indexOf("//")))
+#set($serverProtocol=$project.envJtee.baseUrl.substring(0,$project.envJtee.baseUrl.indexOf("//")))
+#set($htmlProtocol=$project.envHtml.baseUrl.substring(0,$project.envHtml.baseUrl.indexOf("//")))
 ## address = www.mydomain.com:8080 or www.mydomain.com
-#set($address=$project.envJtee.baseUrl.substring($project.envJtee.baseUrl.indexOf("//")).substring(2))
+#set($serverAddress=$project.envJtee.baseUrl.substring($project.envJtee.baseUrl.indexOf("//")).substring(2))
+#set($htmlAddress=$project.envHtml.baseUrl.substring($project.envHtml.baseUrl.indexOf("//")).substring(2))
 ## host = www.mydomain.com
-#if($address.indexOf(":")>-1)
-    #set($host=$address.substring(0, $address.indexOf(":")))
+#if($serverAddress.indexOf(":")>-1)
+    #set($serverHost=$serverAddress.substring(0, $serverAddress.indexOf(":")))
 #else
-    #set($host=$address)
-#end
-## port = 8080 or blank
-#if($address.indexOf(":")>-1)
-    #set($port=$address.substring($address.indexOf(":")).substring(1))
-#else
-    #set($port="80")
+    #set($serverHost=$serverAddress)
 #end
 
-const PROTOCOL = '$protocol';
-const HOST = '$host';
-const PORT = $port;
-const APP = '$project.envJtee.app';
+#if($htmlAddress.indexOf(":")>-1)
+    #set($htmlHost=$htmlAddress.substring(0, $htmlAddress.indexOf(":")))
+#else
+    #set($htmlHost=$htmlAddress)
+#end
+## port = 8080 or blank
+#if($serverAddress.indexOf(":")>-1)
+    #set($serverPort=$serverAddress.substring($serverAddress.indexOf(":")).substring(1))
+#else
+    #set($serverPort="80")
+#end
+
+#if($htmlAddress.indexOf(":")>-1)
+    #set($htmlPort=$htmlAddress.substring($htmlAddress.indexOf(":")).substring(1))
+#else
+    #set($htmlPort="80")
+#end
+
+const SERVER_PROTOCOL = '$serverProtocol';
+const SERVER_HOST = '$serverHost';
+const SERVER_PORT = $serverPort;
+const SERVER_APP = '$project.envJtee.app';
+
+const HTML_PROTOCOL = '$htmlProtocol';
+const HTML_HOST = '$htmlHost';
+const HTML_PORT = $htmlPort;
+
+const HTML_BASE_URL = '$project.envHtml.baseUrl';
 
 class ServerError extends Error {
     constructor(public statusCode: number) {
@@ -41,10 +61,14 @@ function parameters(dict: any): string {
 }
 
 export {
-    PROTOCOL,
-    HOST,
-    PORT,
-    APP,
+    SERVER_PROTOCOL,
+    SERVER_HOST,
+    SERVER_PORT,
+    SERVER_APP,
+    HTML_PROTOCOL,
+    HTML_HOST,
+    HTML_PORT,
+    HTML_BASE_URL,
     ServerError,
     parameters
 }

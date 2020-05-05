@@ -14,7 +14,7 @@
 import {FilterLogicExpr} from "../filter";
 import {OrderByListExpr} from "../order";
 import {ContentRange, deserializeContentRange} from "../range";
-import {PROTOCOL, HOST, PORT, APP, ServerError, parameters} from "../common";
+import {SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT, SERVER_APP, ServerError, parameters} from "../common";
 import {${module.alias}Mask} from "../mask/${module.alias}Mask";
 import {deserialize${module.alias}, deserialize${module.alias}List, ${module.alias}} from "../bean/${module.alias}";
 #if($dateKeyExists && $datetimeKeyExists)
@@ -64,7 +64,7 @@ async function get${module.alias} (
             #set($keys=$keys+"/${dollar}{formatDateTime(key.${keyItem})}")
         #end
     #end
-    const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'GET', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'GET', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -123,7 +123,7 @@ async function add${module.alias} (bean: $module.alias): Promise<{ statusCode: n
             #end
         #end
     #end
-    const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -185,7 +185,7 @@ async function update${module.alias} (bean: $module.alias, mask?: ${module.alias
             #set($keys=$keys+"/${dollar}{bean.${keyItem} !== null ? formatDateTime(bean.${keyItem}) : ''}")
         #end
     #end
-    const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'PUT', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'PUT', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -277,7 +277,7 @@ async function delete${module.alias} ( ##
             #set($keys=$keys+"/${dollar}{formatDateTime(key.${keyItem})}")
         #end
     #end
-    const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{PATH}$keys`, {method: 'DELETE', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys`, {method: 'DELETE', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -334,6 +334,89 @@ async function delete${module.alias} ( ##
 ##    });
 }
 
+async function delete${module.alias}Safely (
+        key: { ##
+            #foreach($keyItem in $keyUnique.items)
+                #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+                #if($keyField.javaType=="Integer")
+                    $keyField.databaseColumn: number ##
+                #elseif($keyField.javaType=="Double")
+                    $keyField.databaseColumn: number ##
+                #elseif($keyField.javaType=="String")
+                    $keyField.databaseColumn: string ##
+                #elseif($keyField.javaType=="java.util.Date")
+                    $keyField.databaseColumn: Date ##
+                #end
+                #if($velocityHasNext)
+                    ; ##
+                #end
+            #end
+        } ##
+    ): Promise<{ statusCode: number; key: { ##
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($keyField.javaType=="Integer")
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="Double");
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="String")
+                $keyField.databaseColumn: string ##
+            #elseif($keyField.javaType=="java.util.Date")
+                $keyField.databaseColumn: Date ##
+            #end
+            #if($velocityHasNext)
+                ; ##
+            #end
+        #end
+        } }> {
+    try {
+        return await delete${module.alias}(key);
+    } catch (e) {
+        return {
+            statusCode: e.statusCode,
+            key
+        };
+    }
+}
+
+async function batchDelete${module.alias}( ##
+        keys: Array<{ ##
+            #foreach($keyItem in $keyUnique.items)
+                #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+                #if($keyField.javaType=="Integer")
+                    $keyField.databaseColumn: number ##
+                #elseif($keyField.javaType=="Double")
+                    $keyField.databaseColumn: number ##
+                #elseif($keyField.javaType=="String")
+                    $keyField.databaseColumn: string ##
+                #elseif($keyField.javaType=="java.util.Date")
+                    $keyField.databaseColumn: Date ##
+                #end
+                #if($velocityHasNext)
+                    ; ##
+                #end
+            #end
+        } ##
+    >): Promise<Array<{ statusCode: number; key: { ##
+         #foreach($keyItem in $keyUnique.items)
+             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+             #if($keyField.javaType=="Integer")
+                 $keyField.databaseColumn: number ##
+             #elseif($keyField.javaType=="Double");
+                 $keyField.databaseColumn: number ##
+             #elseif($keyField.javaType=="String")
+                 $keyField.databaseColumn: string ##
+             #elseif($keyField.javaType=="java.util.Date")
+                 $keyField.databaseColumn: Date ##
+             #end
+             #if($velocityHasNext)
+                 ; ##
+             #end
+         #end
+    } }>> {
+    return await Promise.all(keys.map(v => delete${module.alias}Safely(v)));
+}
+
 async function query${module.alias} (options: { filter?: FilterLogicExpr; orderBy?: OrderByListExpr; pageSize?: number; pageNumber?: number; mask?: ${module.alias}Mask }): Promise<{ statusCode: number; list: Array<$module.alias>; contentRange: ContentRange }> {
     const pageSize = options.pageSize !== undefined ? options.pageSize : 10;
     const pageNumber = options.pageNumber !== undefined ? options.pageNumber : 1;
@@ -342,7 +425,7 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
     const dict = Object();
     dict.orderBy = options.orderBy;
     dict.mask = options.mask;
-    const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{LIST_PATH}${dollar}{parameters(dict)}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=${dollar}{start}-${dollar}{end}`}, body: options.filter?.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{LIST_PATH}${dollar}{parameters(dict)}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=${dollar}{start}-${dollar}{end}`}, body: options.filter?.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -379,7 +462,7 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
 }
 
 async function count${module.alias} (options: {filter?: FilterLogicExpr}): Promise<{ statusCode: number; total: number }> {
-    const response = await fetch(`${dollar}{PROTOCOL}//${dollar}{HOST}:${dollar}{PORT.toString()}/${dollar}{APP}/${dollar}{LIST_PATH}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=items=1--1`}, body: options.filter?.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{LIST_PATH}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=items=1--1`}, body: options.filter?.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -418,6 +501,8 @@ export {
     add$module.alias,
     update$module.alias,
     delete$module.alias,
+    delete${module.alias}Safely,
+    batchDelete$module.alias,
     query$module.alias,
     count$module.alias
 }
