@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import javafx.beans.property.*
-import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 
 class Project(
@@ -12,7 +11,7 @@ class Project(
         envJtee: EnvJtee = EnvJtee(),
         envHtml: EnvHtml = EnvHtml(),
         envAndroid: EnvAndroid = EnvAndroid(),
-        modules: ObservableList<Module> = FXCollections.emptyObservableList()) {
+        modules: ObservableList<Module> = Modules()) {
     var name: String
         @JsonSerialize get() = nameProperty.value
         @JsonDeserialize set(value) = run { nameProperty.value = value }

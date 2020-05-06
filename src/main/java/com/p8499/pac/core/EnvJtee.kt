@@ -7,14 +7,13 @@ import javafx.beans.property.ListProperty
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
-import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 
 class EnvJtee(
         app: String = "",
         baseUrl: String = "",
         `package`: String = "",
-        dataSources: ObservableList<DataSource> = FXCollections.emptyObservableList()) {
+        dataSources: ObservableList<DataSource> = DataSources()) {
     var app: String
         @JsonSerialize get() = appProperty.value
         @JsonDeserialize set(value) = run { appProperty.value = value }

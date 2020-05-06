@@ -7,7 +7,6 @@ import javafx.beans.property.ListProperty
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
-import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 
 class Module(
@@ -21,9 +20,9 @@ class Module(
         path: String = "",
         listPath: String = "",
         attachmentPath: String = "",
-        fields: ObservableList<Field> = FXCollections.emptyObservableList(),
-        uniques: ObservableList<Unique> = FXCollections.emptyObservableList(),
-        references: ObservableList<Reference> = FXCollections.emptyObservableList()) {
+        fields: ObservableList<Field> = Fields(),
+        uniques: ObservableList<Unique> = Uniques(),
+        references: ObservableList<Reference> = References()) {
     var id: String
         @JsonSerialize get() = idProperty.value
         @JsonDeserialize set(value) = run { idProperty.value = value }

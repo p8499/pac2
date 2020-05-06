@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import javafx.beans.property.*
-import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 
 //data class Field(
@@ -31,7 +30,7 @@ class Field(
         fractionLength: Int = 0,
         defaultValue: String = "",
         datePrecision: String = "",
-        values: ObservableList<Value> = FXCollections.emptyObservableList()) {
+        values: ObservableList<Value> = Values()) {
     var source: String
         @JsonSerialize get() = sourceProperty.value
         @JsonDeserialize set(value) = run { sourceProperty.value = value }
