@@ -34,7 +34,7 @@ class ModuleNewController : Controller() {
     val isDatabaseTableValid: Boolean get() = databaseTable.text.matches("""[A-Z_][A-Z0-9_]*""".toRegex())
     val isDatabaseViewValid: Boolean get() = databaseView.text.matches("""[A-Z_][A-Z0-9_]*""".toRegex())
     val isAliasValid: Boolean get() = alias.text.matches("""[A-Z_][a-zA-Z0-9_]*""".toRegex())
-    val isPathValid: Boolean get() = !path.text.startsWith("/") && path.text.endsWith("/")
+    val isPathValid: Boolean get() = !path.text.startsWith("/") && !path.text.endsWith("/")
     val isListPathValid: Boolean get() = !listPath.text.startsWith("/") && !listPath.text.endsWith("/")
     val isAttachmentPathValid: Boolean get() = !attachmentPath.text.startsWith("/") && !attachmentPath.text.endsWith("/")
     val core: Module = Module()
