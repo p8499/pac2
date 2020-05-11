@@ -64,7 +64,7 @@ async function get${module.alias} (
             #set($keys=$keys+"/${dollar}{formatDateTime(key.${keyItem})}")
         #end
     #end
-    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'GET', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'GET', credentials: 'include', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -78,6 +78,7 @@ async function get${module.alias} (
 ##            host: '$host',
 ##            port: $port,
 ##            method: 'GET',
+##            credentials: 'include',
 ##            #set($keys="")
 ##            #foreach($keyItem in $keyUnique.items)
 ##                #if($keyField.javaType=="Integer")
@@ -123,7 +124,7 @@ async function add${module.alias} (bean: $module.alias): Promise<{ statusCode: n
             #end
         #end
     #end
-    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys`, {method: 'POST', credentials: 'include', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -137,6 +138,7 @@ async function add${module.alias} (bean: $module.alias): Promise<{ statusCode: n
 ##            host: '$host',
 ##            port: $port,
 ##            method: 'POST',
+##            credentials: 'include',
 ##            #set($keys="")
 ##            #if(!$keyUnique.serial)
 ##                #foreach($keyItem in $keyUnique.items)
@@ -185,7 +187,7 @@ async function update${module.alias} (bean: $module.alias, mask?: ${module.alias
             #set($keys=$keys+"/${dollar}{bean.${keyItem} !== null ? formatDateTime(bean.${keyItem}) : ''}")
         #end
     #end
-    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'PUT', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys${dollar}{parameters(dict)}`, {method: 'PUT', credentials: 'include', headers: {'Content-Type': 'application/json;charset=UTF-8'}, body: bean.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -199,6 +201,7 @@ async function update${module.alias} (bean: $module.alias, mask?: ${module.alias
 ##            host: '$host',
 ##            port: $port,
 ##            method: 'PUT',
+##            credentials: 'include',
 ##            #set($keys="")
 ##            #foreach($keyItem in $keyUnique.items)
 ##                #if($keyField.javaType=="Integer")
@@ -277,7 +280,7 @@ async function delete${module.alias} ( ##
             #set($keys=$keys+"/${dollar}{formatDateTime(key.${keyItem})}")
         #end
     #end
-    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys`, {method: 'DELETE', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{PATH}$keys`, {method: 'DELETE', credentials: 'include', headers: {'Content-Type': 'application/json;charset=UTF-8'}});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -299,6 +302,7 @@ async function delete${module.alias} ( ##
 ##            host: '$host',
 ##            port: $port,
 ##            method: 'DELETE',
+##            credentials: 'include',
 ##            #set($keys="")
 ##            #foreach($keyItem in $keyUnique.items)
 ##                #if($keyField.javaType=="Integer")
@@ -425,7 +429,7 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
     const dict = Object();
     dict.orderBy = options.orderBy;
     dict.mask = options.mask;
-    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{LIST_PATH}${dollar}{parameters(dict)}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=${dollar}{start}-${dollar}{end}`}, body: options.filter?.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{LIST_PATH}${dollar}{parameters(dict)}`, {method: 'POST', credentials: 'include', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=${dollar}{start}-${dollar}{end}`}, body: options.filter?.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -441,6 +445,7 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
 ##            host: '$host',
 ##            port: $port,
 ##            method: 'POST',
+##            credentials: 'include',
 ##            path: `/${project.envJtee.app}/${module.listPath}${dollar}{parameters(dict)}`,
 ##            headers: {
 ##                Range: `items=${dollar}{start}-${dollar}{end}`
@@ -462,7 +467,7 @@ async function query${module.alias} (options: { filter?: FilterLogicExpr; orderB
 }
 
 async function count${module.alias} (options: {filter?: FilterLogicExpr}): Promise<{ statusCode: number; total: number }> {
-    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{LIST_PATH}`, {method: 'POST', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=items=1--1`}, body: options.filter?.toString()});
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{LIST_PATH}`, {method: 'POST', credentials: 'include', headers: {'Content-Type': 'application/json;charset=UTF-8', Range: `items=items=1--1`}, body: options.filter?.toString()});
     if (response.status < 400)
         return {
             statusCode: response.status,
@@ -476,6 +481,7 @@ async function count${module.alias} (options: {filter?: FilterLogicExpr}): Promi
 ##            host: '$host',
 ##            port: $port,
 ##            method: 'POST',
+##            credentials: 'include',
 ##            path: `/${project.envJtee.app}/${module.listPath}`,
 ##            headers: {
 ##                Range: `items=1--1`
@@ -497,6 +503,9 @@ async function count${module.alias} (options: {filter?: FilterLogicExpr}): Promi
 
 //todo attachments
 export {
+    PATH,
+    LIST_PATH,
+    ATTACHMENT_PATH,
     get$module.alias,
     add$module.alias,
     update$module.alias,
