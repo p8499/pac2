@@ -27,7 +27,7 @@ fun createViewBase(project: Map<*, *>, folder: File) {
     project.listItem("modules").map { it as Map<*, *> }.forEachIndexed { index, module ->
         if (module.listItem("fields").map { it as Map<*, *> }.any { it.stringItem("source") == "view" }) {
             context.put("index", index)
-            File(folder, "${module.stringItem("dataSource")}_create_view_base_${module.stringItem("id")}.txt").apply {
+            File(folder, "${module.stringItem("dataSource")}_create_view_${module.stringItem("id")}.txt").apply {
                 if (!parentFile.exists()) parentFile.mkdirs()
                 writeText(velocityEngine["vm/database/module/%s_create_view_base_%s.txt.vm"].render(context))
                 formatSql(project.readList("$.envJtee.dataSources[?(@.id=='${module.stringItem("dataSource")}')]").mapItem(0).stringItem("databaseType"))

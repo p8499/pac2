@@ -22,6 +22,7 @@ class ${module.alias}Spec implements BeanSpec{
             $field.databaseColumn: {
                 alias: '$field.databaseColumn.toUpperCase()',
                 javaType: '$field.javaType' as JavaTypes, ##java type
+                notNull: $field.notNull, ##not null
                 #if($field.values.size()>0) ## enum values
                     values: {
                         #foreach($value in $field.values)

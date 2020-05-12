@@ -21,13 +21,8 @@
             /*$physicalField.description*/
             $physicalField.databaseColumn.toUpperCase()
             #if($physicalField.javaType=="Integer")
-                #if($physicalField.integerLength<5)
-                    SMALLINT
-                #elseif($physicalField.integerLength<9)
-                    INTEGER
-                #else
-                    BIGINT
-                #end
+                #set($fullLength=$physicalField.integerLength+$physicalField.fractionLength)
+                NUMBER($fullLength,0)
             #elseif($physicalField.javaType=="Double")
                 #set($fullLength=$physicalField.integerLength+$physicalField.fractionLength)
                 NUMBER($fullLength,$physicalField.fractionLength)

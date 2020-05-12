@@ -10,6 +10,7 @@ interface ValueSpec {
 interface FieldSpec {
     alias: string;
     javaType: JavaTypes;
+    notNull: boolean;
     datePrecision?: DatePrecisions;
     values?: Record<string, ValueSpec>;
     getLabel?(value: number | string | Date): string | null;
@@ -20,6 +21,7 @@ interface FieldSpec {
     min?: number;
     max?: number;
     description: string;
+    select?: Vue;
 }
 
 interface UniqueSpec {

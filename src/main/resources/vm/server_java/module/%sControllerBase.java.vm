@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,9 +36,10 @@ public abstract class ${module.alias}ControllerBase {
         #set($value=$value+"/{$keyItem}")
     #end
     protected static final String pathKey = "$value";
+    protected static final String html = "${project.envHtml.baseUrl}";
 
     ## get
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = html, allowCredentials = "true")
     @RequestMapping(
         value = path + pathKey,
         method = RequestMethod.GET,
@@ -66,19 +69,20 @@ public abstract class ${module.alias}ControllerBase {
     }
 
     ## onGet
+    @Nullable
     protected abstract $module.alias onGet(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
         #foreach($keyItem in $keyUnique.items)
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-            $keyField.javaType $keyField.databaseColumn,
+            @Nullable $keyField.javaType $keyField.databaseColumn,
         #end
-        ${module.alias}Mask mask
+        @Nullable ${module.alias}Mask mask
     ) throws Exception;
 
     ## add
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = html, allowCredentials = "true")
     @RequestMapping(
         value = path
             #if(!$keyUnique.serial)
@@ -115,21 +119,22 @@ public abstract class ${module.alias}ControllerBase {
     }
 
     ## onAdd
+    @Nullable
     protected abstract $module.alias onAdd(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
         #if(!$keyUnique.serial)
             #foreach($keyItem in $keyUnique.items)
                 #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-                $keyField.javaType $keyField.databaseColumn,
+                @Nullable $keyField.javaType $keyField.databaseColumn,
             #end
         #end
-        $module.alias bean
+        @Nullable $module.alias bean
     ) throws Exception;
 
     ## update
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = html, allowCredentials = "true")
     @RequestMapping(
         value = path + pathKey,
         method = RequestMethod.PUT,
@@ -161,20 +166,21 @@ public abstract class ${module.alias}ControllerBase {
     }
 
     ## onUpdate
+    @Nullable
     protected abstract $module.alias onUpdate(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
         #foreach($keyItem in $keyUnique.items)
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-            $keyField.javaType $keyField.databaseColumn,
+            @Nullable $keyField.javaType $keyField.databaseColumn,
         #end
-        $module.alias bean,
-        ${module.alias}Mask mask
+        @Nullable $module.alias bean,
+        @Nullable ${module.alias}Mask mask
     ) throws Exception;
 
     ## delete
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = html, allowCredentials = "true")
     @RequestMapping(
         value = path + pathKey,
         method = RequestMethod.DELETE,
@@ -201,17 +207,17 @@ public abstract class ${module.alias}ControllerBase {
 
     ## onDelete
     protected abstract void onDelete(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response
         #foreach($keyItem in $keyUnique.items)
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-            ,$keyField.javaType $keyField.databaseColumn
+            , @Nullable $keyField.javaType $keyField.databaseColumn
         #end
     ) throws Exception;
 
     ## query
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}", exposedHeaders = "Content-Range")
+    @CrossOrigin(origins = html, allowCredentials = "true", exposedHeaders = "Content-Range")
     @RequestMapping(
         value = listPath,
         method = {RequestMethod.GET, RequestMethod.POST},
@@ -243,27 +249,29 @@ public abstract class ${module.alias}ControllerBase {
     }
 
     ## onCount
+    @Nullable
     protected abstract Long onCount(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
-        FilterExpr filter
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
+        @Nullable FilterExpr filter
     ) throws Exception;
 
     ## onQuery
+    @Nonnull
     protected abstract List<$module.alias> onQuery(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
-        FilterExpr filter,
-        OrderByListExpr orderByList,
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
+        @Nullable FilterExpr filter,
+        @Nullable OrderByListExpr orderByList,
         long start,
         long count,
-        ${module.alias}Mask mask
+        @Nullable ${module.alias}Mask mask
     ) throws Exception;
 
     ## downloadAttachment
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}", exposedHeaders = "Content-Disposition")
+    @CrossOrigin(origins = html, allowCredentials = "true", exposedHeaders = "Content-Disposition")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.GET,
@@ -299,20 +307,21 @@ public abstract class ${module.alias}ControllerBase {
     }
 
     ## inputStream
+    @Nullable
     protected abstract InputStream inputStream(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
         #foreach($keyItem in $keyUnique.items)
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-            $keyField.javaType $keyField.databaseColumn,
+            @Nullable $keyField.javaType $keyField.databaseColumn,
         #end
-        String name
+        @Nullable String name
     ) throws Exception;
 
 
     ## uploadAttachment
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = html, allowCredentials = "true")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.PUT,
@@ -345,19 +354,20 @@ public abstract class ${module.alias}ControllerBase {
     }
 
     ## outputStream
+    @Nullable
     protected abstract OutputStream outputStream(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
         #foreach($keyItem in $keyUnique.items)
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-            $keyField.javaType $keyField.databaseColumn,
+            @Nullable $keyField.javaType $keyField.databaseColumn,
         #end
-        String name
+        @Nullable String name
     ) throws Exception;
 
     ## deleteAttachment
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = html, allowCredentials = "true")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.DELETE,
@@ -386,18 +396,18 @@ public abstract class ${module.alias}ControllerBase {
 
     ## onDeleteAttachment
     protected abstract void onDeleteAttachment(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response,
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response,
         #foreach($keyItem in $keyUnique.items)
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-            $keyField.javaType $keyField.databaseColumn,
+            @Nullable $keyField.javaType $keyField.databaseColumn,
         #end
-        String name
+        @Nullable String name
     ) throws Exception;
 
     ## listAttachments
-    @CrossOrigin(origins = "${project.envHtml.baseUrl}")
+    @CrossOrigin(origins = html, allowCredentials = "true")
     @RequestMapping(
         value = attachmentPath + pathKey,
         method = RequestMethod.GET,
@@ -424,13 +434,14 @@ public abstract class ${module.alias}ControllerBase {
     }
 
     ## onListAttachments
+    @Nonnull
     protected abstract List<String> onListAttachments(
-        HttpSession session,
-        HttpServletRequest request,
-        HttpServletResponse response
+        @Nonnull HttpSession session,
+        @Nonnull HttpServletRequest request,
+        @Nonnull HttpServletResponse response
         #foreach($keyItem in $keyUnique.items)
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
-            ,$keyField.javaType $keyField.databaseColumn
+            , @Nullable $keyField.javaType $keyField.databaseColumn
         #end
     ) throws Exception;
 
