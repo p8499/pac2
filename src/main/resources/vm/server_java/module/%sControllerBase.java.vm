@@ -78,7 +78,7 @@ public abstract class ${module.alias}ControllerBase {
             #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
             @Nullable $keyField.javaType $keyField.databaseColumn,
         #end
-        @Nullable ${module.alias}Mask mask
+        @Nonnull ${module.alias}Mask mask
     ) throws Exception;
 
     ## add
@@ -176,7 +176,7 @@ public abstract class ${module.alias}ControllerBase {
             @Nullable $keyField.javaType $keyField.databaseColumn,
         #end
         @Nullable $module.alias bean,
-        @Nullable ${module.alias}Mask mask
+        @Nonnull ${module.alias}Mask mask
     ) throws Exception;
 
     ## delete
@@ -267,7 +267,7 @@ public abstract class ${module.alias}ControllerBase {
         @Nullable OrderByListExpr orderByList,
         long start,
         long count,
-        @Nullable ${module.alias}Mask mask
+        @Nonnull ${module.alias}Mask mask
     ) throws Exception;
 
     ## downloadAttachment
