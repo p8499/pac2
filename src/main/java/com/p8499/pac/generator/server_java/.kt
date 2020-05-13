@@ -11,6 +11,7 @@ fun server_java(project: Map<*, *>, folder: File) {
     mybatisConfig(project, folder)
     springContext(project, folder)
     web(project, folder)
+    context(project, folder)
     defaultDateFormatter(project, folder)
     filterConditionExpr(project, folder)
     filterDeserializer(project, folder)
