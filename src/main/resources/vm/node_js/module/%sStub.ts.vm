@@ -170,6 +170,21 @@ async function add${module.alias} (bean: $module.alias): Promise<{ statusCode: n
 ##    });
 }
 
+async function add${module.alias}Safely(bean: $module.alias): Promise<{ statusCode: number; $StringUtils.uncapitalize($module.alias): ($module.alias) }> {
+    try {
+        return await add${module.alias}(bean);
+    } catch (e) {
+        return {
+            statusCode: e.statusCode,
+            $StringUtils.uncapitalize($module.alias): bean,
+        };
+    }
+}
+
+async function batchAdd${module.alias}(beans: Array<$module.alias>): Promise<Array<{ statusCode: number; $StringUtils.uncapitalize($module.alias): ($module.alias) }>> {
+    return await Promise.all(beans.map((v) => add${module.alias}Safely(v)));
+}
+
 async function update${module.alias} (bean: $module.alias, mask?: ${module.alias}Mask): Promise<{ statusCode: number; $StringUtils.uncapitalize($module.alias): ($module.alias) }> {
     const dict = Object();
     dict.mask = mask;
@@ -229,6 +244,21 @@ async function update${module.alias} (bean: $module.alias, mask?: ${module.alias
 ##        request.write(bean.toString());
 ##        request.end();
 ##    });
+}
+
+async function update${module.alias}Safely(bean: $module.alias, mask?: ${module.alias}Mask): Promise<{ statusCode: number; $StringUtils.uncapitalize($module.alias): ($module.alias) }> {
+    try {
+        return update${module.alias}(bean, mask);
+    } catch (e) {
+        return {
+            statusCode: e.statusCode,
+            $StringUtils.uncapitalize($module.alias): bean
+        }
+    }
+}
+
+async function batchUpdate${module.alias}(beans: Array<$module.alias>, mask?: ${module.alias}Mask): Promise<Array<{ statusCode: number; $StringUtils.uncapitalize($module.alias): ($module.alias) }>> {
+    return await Promise.all(beans.map((v) => update${module.alias}Safely(v)));
 }
 
 async function delete${module.alias} ( ##
@@ -508,7 +538,11 @@ export {
     ATTACHMENT_PATH,
     get$module.alias,
     add$module.alias,
+    add${module.alias}Safely,
+    batchAdd$module.alias,
     update$module.alias,
+    update${module.alias}Safely,
+    batchUpdate$module.alias,
     delete$module.alias,
     delete${module.alias}Safely,
     batchDelete$module.alias,
