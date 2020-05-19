@@ -97,8 +97,8 @@ public class $module.alias {
         #elseif($field.source=="table")
             ## this field is a normal table column, nullable
         #elseif($field.source=="view")
-            ## this field is a view column
-            @javax.validation.constraints.Null(groups={Insert.class,Update.class})
+            ## this field is a view column, WE JUST IGNORE THE FIELD ON INSERT/UPDATE
+            ## @javax.validation.constraints.Null(groups={Insert.class,Update.class})
         #end
         ## constraint annotation of getter
         #if($field.source=="table")
