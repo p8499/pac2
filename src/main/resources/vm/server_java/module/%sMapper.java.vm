@@ -299,7 +299,25 @@ public interface ${module.alias}Mapper {
         #if($velocityCount>1)
             #set($value=$value+" AND")
         #end
-        #set($value=$value+" $keyItem.toUpperCase()=#{bean.$keyItem}")
+        #set($value=$value+" $keyItem.toUpperCase()=#{bean.$keyItem,")
+        #set($value=$value+"jdbcType=")
+        #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+        #if($keyField.javaType=="Integer")
+            #if($keyField.integerLength<5)
+                #set($value=$value+"SMALLINT")
+            #elseif($keyField.integerLength<9)
+                #set($value=$value+"INTEGER")
+            #else
+                #set($value=$value+"BIGINT")
+            #end
+        #elseif($keyField.javaType=="Double")
+            #set($value=$value+"DOUBLE")
+        #elseif($keyField.javaType=="String")
+            #set($value=$value+"VARCHAR")
+        #elseif($keyField.javaType=="java.util.Date")
+            #set($value=$value+"TIMESTAMP")
+        #end
+        #set($value=$value+"}")
     #end
     #set($value=$value+"</"+"if"+">")
     #set($value=$value+"</"+"when"+">")
@@ -332,7 +350,25 @@ public interface ${module.alias}Mapper {
         #if($velocityCount>1)
             #set($value=$value+" AND")
         #end
-        #set($value=$value+" $keyItem.toUpperCase()=#{bean.$keyItem}")
+        #set($value=$value+" $keyItem.toUpperCase()=#{bean.$keyItem,")
+        #set($value=$value+"jdbcType=")
+        #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+        #if($keyField.javaType=="Integer")
+            #if($keyField.integerLength<5)
+                #set($value=$value+"SMALLINT")
+            #elseif($keyField.integerLength<9)
+                #set($value=$value+"INTEGER")
+            #else
+                #set($value=$value+"BIGINT")
+            #end
+        #elseif($keyField.javaType=="Double")
+            #set($value=$value+"DOUBLE")
+        #elseif($keyField.javaType=="String")
+            #set($value=$value+"VARCHAR")
+        #elseif($keyField.javaType=="java.util.Date")
+            #set($value=$value+"TIMESTAMP")
+        #end
+        #set($value=$value+"}")
     #end
     #set($value=$value+"</"+"otherwise"+">")
     #set($value=$value+"</"+"choose"+">")

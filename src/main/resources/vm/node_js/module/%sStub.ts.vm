@@ -248,7 +248,7 @@ async function update${module.alias} (bean: $module.alias, mask?: ${module.alias
 
 async function update${module.alias}Safely(bean: $module.alias, mask?: ${module.alias}Mask): Promise<{ statusCode: number; $StringUtils.uncapitalize($module.alias): ($module.alias) }> {
     try {
-        return update${module.alias}(bean, mask);
+        return await update${module.alias}(bean, mask);
     } catch (e) {
         return {
             statusCode: e.statusCode,

@@ -44,20 +44,7 @@
     <context:component-scan base-package="$project.envJtee.package">
         <context:exclude-filter type="regex" expression="$packageMapper.*"/>
     </context:component-scan>
-    <beans:bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
-    <beans:bean id="conversionServiceExposingInterceptor" class="org.springframework.web.servlet.handler.ConversionServiceExposingInterceptor">
-        <beans:constructor-arg ref="conversionService"/>
-    </beans:bean>
-    <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <beans:property name="interceptors">
-            <beans:list>
-                <beans:ref bean="conversionServiceExposingInterceptor"/>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
-    <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
-    <beans:bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
-    <beans:bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+    <mvc:annotation-driven enable-matrix-variables="true"/>
     <task:executor id="executor" pool-size="3"/>
     <task:scheduler id="scheduler" pool-size="3"/>
     <task:annotation-driven scheduler="scheduler" executor="executor"/>
