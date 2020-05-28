@@ -258,7 +258,7 @@ async function update${module.alias}Safely(bean: $module.alias, mask?: ${module.
 }
 
 async function batchUpdate${module.alias}(beans: Array<$module.alias>, mask?: ${module.alias}Mask): Promise<Array<{ statusCode: number; $StringUtils.uncapitalize($module.alias): ($module.alias) }>> {
-    return await Promise.all(beans.map((v) => update${module.alias}Safely(v)));
+    return await Promise.all(beans.map((v) => update${module.alias}Safely(v, mask)));
 }
 
 async function delete${module.alias} ( ##
@@ -531,7 +531,85 @@ async function count${module.alias} (options: {filter?: FilterLogicExpr}): Promi
 ##    });
 }
 
-//todo attachments
+function download${module.alias}Attachment(
+    key: { ##
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($keyField.javaType=="Integer")
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="Double")
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="String")
+                $keyField.databaseColumn: string ##
+            #elseif($keyField.javaType=="java.util.Date")
+                $keyField.databaseColumn: Date ##
+            #end
+            #if($velocityHasNext)
+                ; ##
+            #end
+        #end
+    },
+    name?: string, uuid?: string): string {
+    const dict = Object();
+    dict.name = name;
+    dict.uuid = uuid;
+    return `${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{ATTACHMENT_PATH}$keys${dollar}{parameters(dict)}`;
+}
+
+async function upload${module.alias}Attachment(
+    key: { ##
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($keyField.javaType=="Integer")
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="Double")
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="String")
+                $keyField.databaseColumn: string ##
+            #elseif($keyField.javaType=="java.util.Date")
+                $keyField.databaseColumn: Date ##
+            #end
+            #if($velocityHasNext)
+                ; ##
+            #end
+        #end
+    },
+    buffer: ArrayBuffer, name?: string): Promise<{ statusCode: number; key: { ##
+        #foreach($keyItem in $keyUnique.items)
+            #set($keyField=$projectContext.read("$.modules[$index].fields[?(@.databaseColumn=='$keyItem')]")[0])
+            #if($keyField.javaType=="Integer")
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="Double")
+                $keyField.databaseColumn: number ##
+            #elseif($keyField.javaType=="String")
+                $keyField.databaseColumn: string ##
+            #elseif($keyField.javaType=="java.util.Date")
+                $keyField.databaseColumn: Date ##
+            #end
+            #if($velocityHasNext)
+                ; ##
+            #end
+        #end
+    }; name?: string }> {
+    const dict = Object();
+    dict.name = name;
+    const response = await fetch(`${dollar}{SERVER_PROTOCOL}//${dollar}{SERVER_HOST}:${dollar}{SERVER_PORT.toString()}/${dollar}{SERVER_APP}/${dollar}{ATTACHMENT_PATH}$keys${dollar}{parameters(dict)}`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/octet-stream'},
+        body: buffer,
+    });
+    if (response.status < 400) {
+        return {
+            statusCode: response.status,
+            key: key,
+            name: name
+        };
+    }
+    throw new ServerError(response.status);
+}
+
+
 export {
     PATH,
     LIST_PATH,
@@ -547,5 +625,7 @@ export {
     delete${module.alias}Safely,
     batchDelete$module.alias,
     query$module.alias,
-    count$module.alias
+    count$module.alias,
+    download${module.alias}Attachment,
+    upload${module.alias}Attachment
 }

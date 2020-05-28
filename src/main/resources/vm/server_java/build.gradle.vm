@@ -28,4 +28,5 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.1'
     compile 'org.springframework:spring-webmvc:4.3.2.RELEASE'
     compile 'org.springframework:spring-jdbc:4.3.2.RELEASE'
+    compile "org.apache.tika:tika-core:1.24.1"
 }

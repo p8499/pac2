@@ -57,7 +57,7 @@ function parameters(dict: any): string {
     const result = Object.keys(dict)
         .filter(value => dict[value] !== undefined)
         .map(value => `${dollar}{value}=${dollar}{dict[value]}`).join('&');
-    return Object.keys(dict).length > 0 ? `?${dollar}{result}` : '';
+    return Object.keys(dict).filter(v => dict[v] !== undefined).length > 0 ? `?${dollar}{result}` : '';
 }
 
 export {
