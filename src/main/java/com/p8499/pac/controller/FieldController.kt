@@ -162,6 +162,7 @@ class FieldController : Controller() {
         integerLength.text = core.integerLength.toString()
         fractionLength.text = core.fractionLength.toString()
         defaultValue.text = core.defaultValue
+        datePrecision.selectionModel.select(core.datePrecision)
     }
 
     @FXML
