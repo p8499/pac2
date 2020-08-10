@@ -215,11 +215,8 @@ public class FilterConditionExpr implements FilterExpr {
             case OP_ISEMPTY:
             {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
-                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
                 sb.append(datum0.toStringPostgresql());
-                sb.append(" IS NULL OR ");
-                sb.append(datum1.toStringPostgresql());
-                sb.append(" = ''");
+                sb.append(" IS NULL"); //TODO
                 break;
             }
             case OP_CONTAIN:
