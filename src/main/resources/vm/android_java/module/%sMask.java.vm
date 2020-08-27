@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class ${module.alias}Mask {
     #set($keyUnique=$projectContext.read("$.modules[$index].uniques[?(@.key==true)]")[0])
     ## fields initial value
-    protected long value = 0x$StringUtils.repeat("0",$module.fields.size());
+    protected long value = 0x$StringUtils.repeat("0",$module.fields.size())L;
     ## for each field
     #foreach($field in $module.fields)
     ## shift is the bitwise offset, for eg, if there are 5 columns, that'll be 4 for the first, 3 for the second, ..., 0 for the last
@@ -29,8 +29,8 @@ public class ${module.alias}Mask {
     ## setter
         @JsonDeserialize
         public ${module.alias}Mask set$StringUtils.capitalize($field.databaseColumn) (boolean $field.databaseColumn) {
-            if ($field.databaseColumn) value |= 0x$StringUtils.repeat("0",$velocityCount0)1$StringUtils.repeat("0",$shift);
-            else value &= 0x$StringUtils.repeat("1",$velocityCount0)0$StringUtils.repeat("1",$shift);
+            if ($field.databaseColumn) value |= 0x$StringUtils.repeat("0",$velocityCount0)1$StringUtils.repeat("0",$shift)L;
+            else value &= 0x$StringUtils.repeat("1",$velocityCount0)0$StringUtils.repeat("1",$shift)L;
             return this;
         }
     #end

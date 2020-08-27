@@ -492,8 +492,8 @@
                                             #set($integrated=$integrated+","+")"+"}")
                                             <stringProp name="">$integrated</stringProp>
                                         #else
-                                            #set($minInteger=1-$Math.pow(10,$physicalField.integerLength))
-                                            #set($maxInteger=-1+$Math.pow(10,$physicalField.integerLength))
+                                            #set($minInteger=1-$Math.pow(10,$Math.min($physicalField.integerLength,18))) ## too long digits will block jmeter to run
+                                            #set($maxInteger=-1+$Math.pow(10,$Math.min($physicalField.integerLength,18))) ## too long digits will block jmeter to run
                                             #set($maxFraction=-1+$Math.pow(10,$physicalField.fractionLength))
                                             #set($integrated="$"+"{"+"__Random"+"("+$String.format("%.0f",$minInteger)+","+$String.format("%.0f",$maxInteger)+","+")"+"}"+"."+"$"+"{"+"__Random"+"("+"0"+","+$String.format("%.0f",$maxFraction)+","+")"+"}")
                                             <stringProp name="">$integrated</stringProp>
